@@ -1,0 +1,25 @@
+package br.com.daw1.locacaoveiculos.model;
+
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
+public class Locacao {
+
+    private long id;
+
+    private LocalDateTime dataLocacaoInicio;
+    private LocalDateTime dataLocacaoFim;
+    private BigDecimal valorTotal;
+
+
+    //private Veiculo veiculo;
+    //private Cliente cliente;
+    private Pagamento pagamento;
+
+    private FormaPagamento formaPagamento;
+    private StatusLocacao statusLocacao;
+
+}
