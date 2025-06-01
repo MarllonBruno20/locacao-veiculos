@@ -1,19 +1,34 @@
 package br.com.daw1.locacaoveiculos.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class Pagamento {
+@Entity
+@Table(name = "pagamento")
+public class Pagamento implements Serializable {
 
-    private long id;
+    private static final long serialVersionUID = 1L;
 
+    @Id
+    @SequenceGenerator(name="gerador_pagamento", sequenceName="pagamento_codigo_seq", allocationSize=1)
+    @GeneratedValue(generator="gerador_pagamento", strategy= GenerationType.SEQUENCE)
+    private long codigo;
+
+    @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
-    private BigDecimal valorPago;
-    private boolean concluido;
 
-    private Locacao locacao;
+    @Column(name = "valor_pago")
+    private BigDecimal valorPago;
+
+    @Enumerated(EnumType.STRING)
+    private FormaPagamento formaPagamento;
+
+    @Enumerated(EnumType.STRING)
+    private StatusPagamento statusPagamento;
 
 }
