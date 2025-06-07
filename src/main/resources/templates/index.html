@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Locadora de Veículos</title>
+    <link href="/dist/output.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col items-center p-6">
+
+<header class="w-full max-w-4xl mb-6">
+    <h1 class="text-3xl font-bold text-center">Sistema de Locação de Veículos</h1>
+</header>
+
+<section class="w-full max-w-4xl bg-white shadow-md rounded-xl p-6">
+    <h1 class="text-xl font-bold mb-4">Teste do Tailwind</h1>
+    <h2 class="text-xl font-semibold mb-4">Ações Rápidas</h2>
+    <h3 class="text-lg font-semibold mb-4">Selecione uma ação:</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <button
+                hx-get="/locacoes"
+                hx-target="#conteudo"
+                class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">
+            Ver Locações
+        </button>
+        <button
+                hx-get="/veiculos"
+                hx-target="#conteudo"
+                class="bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition">
+            Ver Veículos
+        </button>
+    </div>
+</section>
+
+<section id="conteudo" class="w-full max-w-4xl mt-6">
+    <!-- Conteúdo HTMX será injetado aqui -->
+</section>
+
+</body>
+</html>
