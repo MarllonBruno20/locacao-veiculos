@@ -3,6 +3,7 @@ package br.com.daw1.locacaoveiculos.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,9 +27,11 @@ public class Usuario implements Serializable {
     @GeneratedValue(generator="gerador_usuario", strategy=GenerationType.SEQUENCE)
     private Long codigo;
 
+    @Column(name = "Nome_Usuario")
     @NotBlank(message = "O nome de usuário é obrigatório")
     private String nomeUsuario;
 
+    @Column(name = "Sennha")
     @NotBlank(message = "A senha é obrigatória")
     private String senha;
     
@@ -36,9 +39,10 @@ public class Usuario implements Serializable {
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipo; 
 
-    @ManyToOne
-    @JoinColumn(name = "codigo_pessoa")
+    //@ManyToOne // Caso não precise  usar uma classe pessoa não tem porque usar essas lnhas
+    //@JoinColumn(name = "codigo_pessoa")
     // O usuário precisa estar referenciado à classe Pessoa
+    @Column(name = "Pessoa")
     private Pessoa pessoa; 
 
 

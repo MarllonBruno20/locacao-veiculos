@@ -11,7 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "veiculo")
 public class Veiculo implements Serializable {
@@ -23,9 +25,11 @@ public class Veiculo implements Serializable {
     @GeneratedValue(generator="gerador_veiculo", strategy=GenerationType.SEQUENCE)
     private Long codigo;
 
+    @Column(name = "Marca")
     @NotBlank(message = "A marca do veículo é obrigatória")
     private String marca;
 
+    @Column(name = "Modelo")
     @NotBlank(message = "O modelo do veículo é obrigatório")
     private String modelo;
 
@@ -33,8 +37,10 @@ public class Veiculo implements Serializable {
     @NotBlank(message = "A placa do veículo é obrigatória")
     private String placa;
 
+    @Column(name = "Cor")
     private String cor;
     
+    @Column(name = "Valor_Diária")
     private double valorDiaria;
 
    

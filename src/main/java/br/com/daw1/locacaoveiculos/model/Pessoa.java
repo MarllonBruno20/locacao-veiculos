@@ -27,19 +27,23 @@ public class Pessoa implements Serializable {
     @GeneratedValue(generator="gerador_pessoa", strategy=GenerationType.SEQUENCE)
     private Long codigo;
 
+    @Column(name = "Nome")
     @NotBlank(message = "O nome da pessoa é obrigatório")
     private String nome;
 
+    @Column(name = "CPF")
     @NotBlank(message = "O CPF da pessoa é obrigatório")
     private String cpf;
 
+    @Column(name = "Data_nascimento")
     @NotNull(message = "A data de nascimento da pessoa é obrigatória")
-    @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 
+    @Column(name = "Telefone")
     @NotNull(message = "O Telefone da pessoa é obrigatória")
     private String telefone;
 
+    @Column(name = "Email")
     private String email;
 
     //Se uma pessoa tiver mais de um usuário podemos ter controle por meio da Lista 
