@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:x-transition="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locadora de Veículos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#3b82f6',
+                        'primary-dark': '#2563eb',
+                        'secondary': '#64748b'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50" th:fragment="header">
+
+<nav class="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
+    <div class="container mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+            <!-- Logo Section -->
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-xl shadow-lg">
+                    <i class="fas fa-car text-white text-xl"></i>
+                </div>
+                <a class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent hover:from-blue-700 hover:to-blue-900 transition-all duration-300" href="#">
+                    AutoRent
+                </a>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex lg:items-center lg:space-x-8">
+                <div class="flex items-center space-x-6">
+                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" href="#">
+                        Início
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" href="#">
+                        Veículos
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" href="#">
+                        Sobre
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" href="#">
+                        Contato
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                </div>
+
+                <!-- Auth Section -->
+                <div id="auth-section" class="flex items-center">
+                    <!-- Logged Out View -->
+                    <div class="flex items-center space-x-3" id="logged-out-view">
+                        <a href="#" class="px-4 py-2 text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 flex items-center space-x-2">
+                            <i class="fas fa-sign-in-alt text-sm"></i>
+                            <span>Entrar</span>
+                        </a>
+                        <a href="#" class="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2">
+                            <i class="fas fa-user-plus text-sm"></i>
+                            <span>Criar Conta</span>
+                        </a>
+                    </div>
+
+                    <!-- Logged In View -->
+                    <div class="hidden" id="logged-in-view" x-data="{ dropdownOpen: false }">
+                        <div class="relative">
+                            <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                <div class="relative">
+                                    <img class="h-10 w-10 rounded-full object-cover border-2 border-blue-200 shadow-md" src="https://via.placeholder.com/150" alt="Avatar do usuário">
+                                    <div class="absolute -bottom-1 -right-1 h-4 w-4 bg-green-400 border-2 border-white rounded-full"></div>
+                                </div>
+                                <div class="hidden md:block text-left">
+                                    <p class="text-sm font-medium text-gray-700">João Silva</p>
+                                    <p class="text-xs text-gray-500">Premium</p>
+                                </div>
+                                <i class="fas fa-chevron-down text-gray-400 text-sm transition-transform duration-300" :class="{ 'rotate-180': dropdownOpen }"></i>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div x-show="dropdownOpen"
+                                 @click.away="dropdownOpen = false"
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 scale-95"
+                                 x-transition:enter-end="opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 scale-100"
+                                 x-transition:leave-end="opacity-0 scale-95"
+                                 class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+
+                                <div class="py-2">
+                                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
+                                        <i class="fas fa-user mr-3 text-gray-400"></i>
+                                        Meu Perfil
+                                    </a>
+                                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
+                                        <i class="fas fa-calendar-alt mr-3 text-gray-400"></i>
+                                        Minhas Reservas
+                                    </a>
+                                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
+                                        <i class="fas fa-heart mr-3 text-gray-400"></i>
+                                        Favoritos
+                                    </a>
+                                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
+                                        <i class="fas fa-cog mr-3 text-gray-400"></i>
+                                        Configurações
+                                    </a>
+                                </div>
+
+                                <div class="border-t border-gray-100">
+                                    <a href="#" class="flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200">
+                                        <i class="fas fa-sign-out-alt mr-3"></i>
+                                        Sair
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="lg:hidden flex items-center">
+                <button id="mobile-menu-button" class="p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden mt-4 pb-4 border-t border-gray-100">
+            <div class="pt-4 space-y-2">
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-home mr-3 text-gray-400"></i>
+                    Início
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-car mr-3 text-gray-400"></i>
+                    Veículos
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-info-circle mr-3 text-gray-400"></i>
+                    Sobre
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-envelope mr-3 text-gray-400"></i>
+                    Contato
+                </a>
+            </div>
+
+            <div class="border-t border-gray-100 mt-4 pt-4">
+                <div id="mobile-auth-section">
+                    <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-sign-in-alt mr-3 text-gray-400"></i>
+                        Entrar
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 mt-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300">
+                        <i class="fas fa-user-plus mr-3"></i>
+                        Criar Conta
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Auth state management
+    let isLoggedIn = false;
+
+    function toggleAuthState() {
+        isLoggedIn = !isLoggedIn;
+        updateAuthDisplay();
+    }
+
+    function updateAuthDisplay() {
+        const loggedOutView = document.getElementById('logged-out-view');
+        const loggedInView = document.getElementById('logged-in-view');
+        const mobileAuthSection = document.getElementById('mobile-auth-section');
+
+        if (isLoggedIn) {
+            loggedOutView.classList.add('hidden');
+            loggedInView.classList.remove('hidden');
+
+            // Update mobile menu for logged in user
+            mobileAuthSection.innerHTML = `
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-user mr-3 text-gray-400"></i>
+                    Meu Perfil
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-calendar-alt mr-3 text-gray-400"></i>
+                    Minhas Reservas
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    Sair
+                </a>
+            `;
+        } else {
+            loggedOutView.classList.remove('hidden');
+            loggedInView.classList.add('hidden');
+
+            // Reset mobile menu for logged out user
+            mobileAuthSection.innerHTML = `
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-sign-in-alt mr-3 text-gray-400"></i>
+                    Entrar
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 mt-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300">
+                    <i class="fas fa-user-plus mr-3"></i>
+                    Criar Conta
+                </a>
+            `;
+        }
+    }
+
+    // Initialize auth display
+    updateAuthDisplay();
+</script>
+
+</body>
+</html>
