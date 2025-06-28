@@ -1,4 +1,4 @@
-package br.com.daw1.locacaoveiculos.model;
+package br.com.daw1.locacaoveiculos.model.enums;
 
 public enum TipoUsuario {
 
