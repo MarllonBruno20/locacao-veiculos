@@ -3,6 +3,7 @@ package br.com.daw1.locacaoveiculos.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import br.com.daw1.locacaoveiculos.model.enums.TipoUsuario;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,7 +35,7 @@ public class Usuario implements Serializable {
     
     // Aqui é definido o tipo usuario que pode ser CLIENTE ou ADMINISTRADOR
     @Enumerated(EnumType.STRING)
-    private TipoUsuario tipo; 
+    private TipoUsuario tipo;
 
     @ManyToOne
     @JoinColumn(name = "codigo_pessoa")

@@ -1,17 +1,21 @@
 package br.com.daw1.locacaoveiculos.model;
 
 import java.io.Serializable;
-import java.util.Objects;
+import java.math.BigDecimal;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import br.com.daw1.locacaoveiculos.model.enums.CategoriaVeiculo;
+import br.com.daw1.locacaoveiculos.model.enums.CombustivelVeiculo;
+import br.com.daw1.locacaoveiculos.model.enums.StatusVeiculo;
+import br.com.daw1.locacaoveiculos.model.enums.TipoCambioVeiculo;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "veiculo")
 public class Veiculo implements Serializable {
@@ -29,83 +33,44 @@ public class Veiculo implements Serializable {
     @NotBlank(message = "O modelo do veículo é obrigatório")
     private String modelo;
 
-    @Column(name = "placa", unique = true, nullable = false)
     @NotBlank(message = "A placa do veículo é obrigatória")
     private String placa;
 
-    private String cor;
-    
-    private double valorDiaria;
+    @NotNull(message = "O número de portas é obrigatório")
+    @Min(message = "O número de portas deve ser maior ou igual a 2", value = 2)
+    @Max(message = "O número de portas deve ser menor ou igual a 4", value = 4)
+    @Column(name = "numero_portas", nullable = false)
+    private Integer numeroPortas;
 
-   
+    @NotNull(message = "O número de passageiros é obrigatório")
+    @Min(message = "O número de passageiros deve ser maior ou igual a 2", value = 2)
+    @Max(message = "O número de passageiros deve ser menor ou igual a 7", value = 7)
+    @Column(name = "numero_passageiros", nullable = false)
+    private Integer numeroPassageiros;
 
-    public Long getCodigo() {
-        return codigo;
-    }
+    @NotNull(message = "O valor diária é obrigatório")
+    @Positive(message = "O valor da diária deve ser positivo")
+    @Column(name = "valor_diaria", nullable = false, precision = 10, scale = 2)
+    private BigDecimal valorDiaria;
 
-    public void setCodigo(Long codigo) {
-        this.codigo = codigo;
-    }
+    @NotNull(message = "O status do veículo é obrigatório")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusVeiculo status;
 
-    public String getMarca() {
-        return marca;
-    }
+    @NotNull(message = "A categoria do veículo é obrigatória")
+    @Enumerated(EnumType.STRING)
+    private CategoriaVeiculo categoria;
 
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
+    @NotNull(message = "O combustível do veículo é obrigatório")
+    @Enumerated(EnumType.STRING)
+    private CombustivelVeiculo combustivel;
 
-    public String getModelo() {
-        return modelo;
-    }
+    @NotNull(message = "O tipo de cambio do veículo é obrigatório")
+    @Enumerated(EnumType.STRING)
+    private TipoCambioVeiculo tipoCambio;
 
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
-    public String getPlaca() {
-        return placa;
-    }
-
-    public void setPlaca(String placa) {
-        this.placa = placa;
-    }
-
-    public String getCor() {
-        return cor;
-    }
-
-    public void setCor(String cor) {
-        this.cor = cor;
-    }
-
-    public double getValorDiaria() {
-        return valorDiaria;
-    }
-
-    public void setValorDiaria(double valorDiaria) {
-        this.valorDiaria = valorDiaria;
-    }
-
-    @Override
-    public String toString() {
-        return "Veiculo [codigo=" + codigo + ", marca=" + marca + ", modelo=" + modelo + ", placa=" + placa + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(codigo);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Veiculo other = (Veiculo) obj;
-        return Objects.equals(codigo, other.codigo);
-    }
+    @NotNull(message = "A imagem do veículo é obrigatória")
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 }

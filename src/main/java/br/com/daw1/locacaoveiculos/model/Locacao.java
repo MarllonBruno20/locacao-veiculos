@@ -1,5 +1,6 @@
 package br.com.daw1.locacaoveiculos.model;
 
+import br.com.daw1.locacaoveiculos.model.enums.StatusLocacao;
 import jakarta.persistence.*;
 import lombok.Data;
 
