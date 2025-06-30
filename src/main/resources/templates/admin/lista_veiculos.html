@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR" layout:decorate="~{layout/layoutpadrao}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title th:text="${titulo}">Gerenciamento de Frota</title>
+</head>
+<body>
+
+<main layout:fragment="conteudo" th:fragment="cardVeiculos">
+
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">
+            Gerenciamento de Frota
+        </h1>
+        <a th:href="@{/admin/veiculos/novo}"
+           class="px-5 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transform hover:-translate-y-0.5 transition-all duration-300">
+            Adicionar Novo Veículo
+        </a>
+    </div>
+
+    <div class="space-y-6">
+        <div th:each="veiculo : ${veiculos}" th:id="|veiculo-card-${veiculo.codigo}|"
+             class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row transition-all duration-300 hover:shadow-2xl">
+
+            <div class="md:w-1/3 relative">
+                <img th:src="${veiculo.imageUrl}" th:alt="|Imagem de ${veiculo.modelo}|" class="w-full h-full object-cover min-h-[250px]">
+                <span th:text="${veiculo.status.toString().replace('_', ' ')}"
+                      th:classappend="${veiculo.status.name() == 'ATIVO'} ? 'bg-green-500' :
+                        (${veiculo.status.name() == 'INATIVO'} ? 'bg-red-500' : 'bg-gray-500')"
+                      class="absolute top-0 left-0 text-white text-xs font-bold px-3 py-1 m-3 rounded-full shadow-lg">
+                    Status
+                </span>
+            </div>
+
+            <div class="p-6 md:w-2/3 flex flex-col">
+                <div class="flex-grow">
+                    <h2 class="text-2xl font-bold text-gray-800" th:text="|${veiculo.marca} ${veiculo.modelo}|"></h2>
+                    <p class="font-semibold text-gray-600" th:text="${veiculo.placa}"></p>
+
+                    <dl class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-sm">
+                        <div>
+                            <dt class="font-medium text-gray-500">Categoria</dt>
+                            <dd class="text-gray-900 font-semibold" th:text="${veiculo.categoria}"></dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Câmbio</dt>
+                            <dd class="text-gray-900 font-semibold" th:text="${veiculo.tipoCambio}"></dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Combustível</dt>
+                            <dd class="text-gray-900 font-semibold" th:text="${veiculo.combustivel}"></dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Portas</dt>
+                            <dd class="text-gray-900 font-semibold" th:text="${veiculo.numeroPortas}"></dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Passageiros</dt>
+                            <dd class="text-gray-900 font-semibold" th:text="${veiculo.numeroPassageiros}"></dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Diária</dt>
+                            <dd class="text-green-600 font-bold" th:text="${#numbers.formatCurrency(veiculo.valorDiaria)}"></dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <a th:href="@{/admin/veiculos/editar/{id}(id=${veiculo.codigo})}"
+
+                       th:hx-get="@{/admin/veiculos/editar/{id}(id=${veiculo.codigo})}"
+                       hx-target="#main-content"
+                       hx-swap="innerHTML"
+                       hx-push-url="true"
+                       class="px-4 py-2 text-sm bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition-colors">
+                        Alterar
+                    </a>
+                    <button th:if="${veiculo.status.name() != 'INATIVO'}"
+                            th:hx-post="@{/admin/veiculos/inativar/{id}(id=${veiculo.codigo})}"
+                            hx-confirm="Tem certeza que deseja inativar este veículo?"
+                            th:hx-target="|#veiculo-card-${veiculo.codigo}|"
+                            hx-swap="outerHTML"
+                            class="px-4 py-2 text-sm bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition-colors">
+                        Inativar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>

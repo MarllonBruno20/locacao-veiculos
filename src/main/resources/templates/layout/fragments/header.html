@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:x-transition="http://www.w3.org/1999/xhtml">
+<html lang="pt-br" xmlns:x-transition="http://www.w3.org/1999/xhtml" xmlns:hx-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="/dist/output.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -40,16 +40,24 @@
             <!-- Desktop Navigation -->
             <div class="hidden lg:flex lg:items-center lg:space-x-8">
                 <div class="flex items-center space-x-6">
-                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" href="#">
+                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
+                       href="/">
                         Início
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
-                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" href="#">
-                        Veículos
+                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
+                       href="/admin/veiculos/novo"
+                       hx-get="/admin/veiculos/novo" hx-target="#main-content"
+                       hx-swap="innerHTML"  hx-push-url="true"> Cadastrar Veículo
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
-                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" href="#">
-                        Sobre
+                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
+                       href="/veiculos/veiculos-disponiveis"
+                       hx-get="/veiculos/veiculos-disponiveis" hx-target="#main-content"
+                       hx-swap="innerHTML"  hx-push-url="true"
+                       hx-on::after-swap="window.scrollTo(0, 0)"
+                    >
+                        Veículos
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
                     <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" href="#">

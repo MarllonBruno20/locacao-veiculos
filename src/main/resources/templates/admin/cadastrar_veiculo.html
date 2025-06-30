@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layoutpadrao}">
+<head>
+    <title>Cadastrar Veículo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#3b82f6',
+                        'primary-dark': '#2563eb'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+<main layout:fragment="conteudo" class="w-full min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+
+    <div th:fragment="formulario" id="main" class="max-w-4xl mx-auto">
+
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full shadow-lg mb-4">
+                <i class="fas fa-car text-white text-2xl"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4 mt-4">Cadastrar Veículo</h1>
+            <p class="text-gray-600">Preencha as informações do veículo para adicionar à frota</p>
+        </div>
+
+        <form th:hx-post="@{/admin/veiculos/salvar}"
+              method="post"
+              hx-target="#main"
+              hx-swap="outerHTML"
+              th:object="${veiculo}"
+              class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+
+            <!-- Form Header -->
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-6">
+                <h2 class="text-xl font-semibold text-white flex items-center mb-2 mt-2">
+                    <i class="fas fa-info-circle mr-3"></i>
+                    Informações do Veículo
+                </h2>
+            </div>
+
+            <div class="p-8 space-y-6">
+                <!-- Basic Information Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-tag text-blue-500 mr-2"></i>
+                            Marca
+                        </label>
+                        <div class="relative">
+                            <input type="text" th:field="${veiculo.marca}"
+                                   class="w-full pl-4 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 outline-none hover:border-gray-300"
+                                   placeholder="Ex: Toyota, Honda, Ford"/>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-car text-blue-500 mr-2"></i>
+                            Modelo
+                        </label>
+                        <div class="relative">
+                            <input type="text" th:field="${veiculo.modelo}"
+                                   class="w-full pl-4 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 outline-none hover:border-gray-300"
+                                   placeholder="Ex: Corolla, Civic, Focus"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-id-card text-blue-500 mr-2"></i>
+                        Placa
+                    </label>
+                    <div class="relative">
+                        <input type="text" th:field="${veiculo.placa}"
+                               class="w-full pl-4 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 outline-none hover:border-gray-300"
+                               placeholder="Ex: ABC-1234"/>
+                    </div>
+                </div>
+
+                <!-- Vehicle Specifications -->
+                <div class="bg-gray-50 rounded-xl p-6 border border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-cogs text-blue-500 mr-2"></i>
+                        Especificações Técnicas
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-door-open text-blue-500 mr-2"></i>
+                                Nº de Portas
+                            </label>
+                            <input type="number" th:field="${veiculo.numeroPortas}"
+                                   class="w-full pl-4 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 outline-none hover:border-gray-300"
+                                   placeholder="Ex: 4"/>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-users text-blue-500 mr-2"></i>
+                                Nº de Passageiros
+                            </label>
+                            <input type="number" th:field="${veiculo.numeroPassageiros}"
+                                   class="w-full pl-4 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 outline-none hover:border-gray-300"
+                                   placeholder="Ex: 5"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Section -->
+                <div class="bg-green-50 rounded-xl p-6 border border-green-100">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-dollar-sign text-green-500 mr-2"></i>
+                        Informações de Preço
+                    </h3>
+
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-money-bill-wave text-green-500 mr-2"></i>
+                            Valor da Diária (R$)
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">R$</span>
+                            <input type="number" th:field="${veiculo.valorDiaria}" step="0.01"
+                                   class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-300 outline-none hover:border-gray-300"
+                                   placeholder="0,00"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle Categories -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-list text-blue-500 mr-2"></i>
+                            Categoria
+                        </label>
+                        <select th:field="${veiculo.categoria}"
+                                class="w-full pl-4 pr-10 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 outline-none hover:border-gray-300 appearance-none bg-white">
+                            <option value="">Selecione uma categoria</option>
+                            <option th:each="c : ${listaDeCategorias}" th:value="${c}" th:text="${c}"></option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-gas-pump text-blue-500 mr-2"></i>
+                            Combustível
+                        </label>
+                        <select th:field="${veiculo.combustivel}"
+                                class="w-full pl-4 pr-10 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 outline-none hover:border-gray-300 appearance-none bg-white">
+                            <option value="">Selecione o combustível</option>
+                            <option th:each="c : ${listaDeCombustiveis}" th:value="${c}" th:text="${c}"></option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-cog text-blue-500 mr-2"></i>
+                            Câmbio
+                        </label>
+                        <select th:field="${veiculo.tipoCambio}"
+                                class="w-full pl-4 pr-10 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 outline-none hover:border-gray-300 appearance-none bg-white">
+                            <option value="">Selecione o câmbio</option>
+                            <option th:each="c : ${listaDeCambios}" th:value="${c}" th:text="${c}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Image Section -->
+                <div class="bg-purple-50 rounded-xl p-6 border border-purple-100">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-image text-purple-500 mr-2"></i>
+                        Imagem do Veículo
+                    </h3>
+
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-link text-purple-500 mr-2"></i>
+                            URL da Imagem
+                        </label>
+                        <input type="text" th:field="${veiculo.imageUrl}"
+                               class="w-full pl-4 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-300 outline-none hover:border-gray-300"
+                               placeholder="https://exemplo.com/imagem-do-veiculo.jpg"/>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-center pt-6">
+                    <button type="submit"
+                            class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center space-x-3">
+                        <i class="fas fa-save text-lg"></i>
+                        <span>Salvar Veículo</span>
+                        <div class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>
