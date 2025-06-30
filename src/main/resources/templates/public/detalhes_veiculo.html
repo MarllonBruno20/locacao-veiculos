@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/layoutpadrao}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title th:text="${titulo}">Detalhes do Veículo</title>
+</head>
+<body>
+
+<main layout:fragment="conteudo" th:fragment="detalhesVeiculo" class="py-12">
+    <div th:object="${veiculo}" class="container mx-auto px-4">
+
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2">
+
+                <div>
+                    <img th:src="${veiculo.imageUrl}" th:alt="|Imagem de ${veiculo.marca} ${veiculo.modelo}|" class="w-full h-full object-cover min-h-[400px]">
+                </div>
+
+                <div class="p-8 flex flex-col">
+                    <div>
+                        <h1 class="text-4xl font-extrabold text-gray-900" th:text="|${veiculo.marca} ${veiculo.modelo}|"></h1>
+                        <p class="text-5xl font-bold text-green-600 mt-4" th:text="|${#numbers.formatCurrency(veiculo.valorDiaria)} - por dia|">
+                            <span class="text-lg font-medium text-gray-500">/ dia</span>
+                        </p>
+                    </div>
+
+                    <dl class="my-8 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-b py-6">
+                        <div>
+                            <dt class="font-medium text-gray-500">Categoria</dt>
+                            <dd class="text-gray-900 font-semibold" th:text="${veiculo.categoria}"></dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Câmbio</dt>
+                            <dd class="text-gray-900 font-semibold" th:text="${veiculo.tipoCambio}"></dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Combustível</dt>
+                            <dd class="text-gray-900 font-semibold" th:text="${veiculo.combustivel}"></dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Portas</dt>
+                            <dd class="text-gray-900 font-semibold" th:text="${veiculo.numeroPortas}"></dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-500">Passageiros</dt>
+                            <dd class="text-gray-900 font-semibold" th:text="${veiculo.numeroPassageiros}"></dd>
+                        </div>
+                    </dl>
+
+                    <div class="mt-auto">
+                        <a th:href="@{/agendamento/novo(veiculoId=${veiculo.codigo})}"
+                           class="block w-full text-center py-4 text-lg bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300">
+                            Escolher Este Veículo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

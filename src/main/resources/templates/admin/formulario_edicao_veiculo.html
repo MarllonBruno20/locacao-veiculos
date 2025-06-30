@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layoutpadrao}">
+<head>
+    <title>Editar Veículo</title>
+</head>
+<body>
+
+<main layout:fragment="conteudo" th:fragment="formularioEdicao">
+
+    <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Editar Veículo</h1>
+
+        <form th:action="@{/admin/veiculos/salvar}"
+              th:object="${veiculo}"
+              method="post"
+              th:hx-post="@{/admin/veiculos/salvar}"
+              hx-indicator="#spinner">
+
+            <input type="hidden" th:field="*{codigo}" />
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div>
+                    <label for="codigo" class="block text-sm font-medium text-gray-700">Código</label>
+                    <input type="text" id="codigo" th:field="*{codigo}" disabled
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100 text-gray-500 cursor-not-allowed">
+                </div>
+
+                <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select id="status" th:field="*{status}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option th:each="s : ${listaDeStatus}" th:value="${s}" th:text="${s.toString().replace('_', ' ')}"></option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+
+                <div>
+                    <label for="marca" class="block text-sm font-medium text-gray-700">Marca</label>
+                    <input type="text" id="marca" th:field="*{marca}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <p th:if="${#fields.hasErrors('marca')}" th:errors="*{marca}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+
+                <div>
+                    <label for="modelo" class="block text-sm font-medium text-gray-700">Modelo</label>
+                    <input type="text" id="modelo" th:field="*{modelo}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <p th:if="${#fields.hasErrors('modelo')}" th:errors="*{modelo}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+
+                <div>
+                    <label for="placa" class="block text-sm font-medium text-gray-700">Placa</label>
+                    <input type="text" id="placa" th:field="*{placa}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <p th:if="${#fields.hasErrors('placa')}" th:errors="*{placa}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+
+                <div>
+                    <label for="numeroPortas" class="block text-sm font-medium text-gray-700">Nº de Portas</label>
+                    <input type="number" id="numeroPortas" th:field="*{numeroPortas}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <p th:if="${#fields.hasErrors('numeroPortas')}" th:errors="*{numeroPortas}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+
+                <div>
+                    <label for="numeroPassageiros" class="block text-sm font-medium text-gray-700">Nº de Passageiros</label>
+                    <input type="number" id="numeroPassageiros" th:field="*{numeroPassageiros}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <p th:if="${#fields.hasErrors('numeroPassageiros')}" th:errors="*{numeroPassageiros}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+
+                <div>
+                    <label for="categoria" class="block text-sm font-medium text-gray-700">Categoria</label>
+                    <select id="categoria" th:field="*{categoria}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option th:each="cat : ${listaDeCategorias}" th:value="${cat}" th:text="${cat}"></option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+
+                <div>
+                    <label for="combustivel" class="block text-sm font-medium text-gray-700">Combustível</label>
+                    <select id="combustivel" th:field="*{combustivel}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option th:each="comb : ${listaDeCombustiveis}" th:value="${comb}" th:text="${comb}"></option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('combustivel')}" th:errors="*{combustivel}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+
+                <div class="md:col-span-1">
+                    <label for="tipoCambio" class="block text-sm font-medium text-gray-700">Tipo de Câmbio</label>
+                    <select id="tipoCambio" th:field="*{tipoCambio}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option th:each="cambio : ${listaDeCambios}" th:value="${cambio}" th:text="${cambio}"></option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('tipoCambio')}" th:errors="*{tipoCambio}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+
+                <div class="md:col-span-1">
+                    <label for="valorDiaria" class="block text-sm font-medium text-gray-700">Valor da Diária (R$)</label>
+                    <input type="number" step="0.01" id="valorDiaria" th:field="*{valorDiaria}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <p th:if="${#fields.hasErrors('valorDiaria')}" th:errors="*{valorDiaria}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label for="imageUrl" class="block text-sm font-medium text-gray-700">URL da Imagem</label>
+                    <input type="text" id="imageUrl" th:field="*{imageUrl}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <p th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}" class="text-sm text-red-600 mt-1"></p>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end items-center space-x-3">
+                <span id="spinner" class="htmx-indicator">Salvando...</span>
+                <a th:href="@{/admin/veiculos/veiculos-disponiveis}"
+                   th:hx-get="@{/admin/veiculos/veiculos-disponiveis}"
+                   hx-target="#main-content"
+                   hx-push-url="true"
+                   class="bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+                    Cancelar
+                </a>
+                <button type="submit" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700">
+                    Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+</body>
+</html>

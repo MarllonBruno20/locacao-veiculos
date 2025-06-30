@@ -53,7 +53,6 @@ public class Veiculo implements Serializable {
     @Column(name = "valor_diaria", nullable = false, precision = 10, scale = 2)
     private BigDecimal valorDiaria;
 
-    @NotNull(message = "O status do veículo é obrigatório")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusVeiculo status;
