@@ -70,11 +70,23 @@
                 <div id="auth-section" class="flex items-center">
                     <!-- Logged Out View -->
                     <div class="flex items-center space-x-3" id="logged-out-view">
-                        <a href="#" class="px-4 py-2 text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 flex items-center space-x-2">
+                        <a th:href="@{/auth/login}"
+                            hx-get="@{/auth/login}"
+                            hx-target="#main-content"
+                            hx-swap="innerHTML"
+                            hx-push-url="true"
+                            hx-on::after-swap="window.scrollTo(0, 0)"
+                            class="px-4 py-2 text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 flex items-center space-x-2">
                             <i class="fas fa-sign-in-alt text-sm"></i>
                             <span>Entrar</span>
                         </a>
-                        <a href="#" class="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2">
+                        <a th:href="@{/admin/usuarios/novo}"
+                            hx-get="@{/admin/usuarios/novo}"
+                            hx-target="#main-content"
+                            hx-swap="innerHTML"
+                            hx-push-url="true"
+                            hx-on::after-swap="window.scrollTo(0, 0)"
+                            class="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2">
                             <i class="fas fa-user-plus text-sm"></i>
                             <span>Criar Conta</span>
                         </a>
