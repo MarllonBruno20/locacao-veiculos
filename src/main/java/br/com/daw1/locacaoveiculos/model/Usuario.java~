@@ -14,7 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -40,7 +39,6 @@ public class Usuario implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "codigo_pessoa")
-    @Valid
     // O usuário precisa estar referenciado à classe Pessoa
     private Pessoa pessoa; 
 

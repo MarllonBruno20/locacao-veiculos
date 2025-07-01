@@ -44,43 +44,48 @@ public class AdminUsuarioController {
 
     @HxRequest
     @PostMapping("/salvar")
-    public String salvarUsuario(@Valid @ModelAttribute("usuario") Usuario usuario,
-                                BindingResult bindingResultUsuario,
-                                @Valid @ModelAttribute("pessoa") Pessoa pessoa,
-                                BindingResult bindingResultPessoa,
-                                Model model,
-                                HttpServletResponse response) { // HttpServletResponse adicionado
+    public String salvarUsuario(
+            @Valid @ModelAttribute("usuario") Usuario usuario,
+            BindingResult bindingResult, // Apenas UM BindingResult para o objeto principal
+            Model model,
+            HttpServletResponse response) {
 
-        // Verificar erros de validação da Pessoa ou Usuário
-        if (bindingResultPessoa.hasErrors() || bindingResultUsuario.hasErrors()) {
+        // 1. Verifica erros de validação (tanto de Usuario quanto da Pessoa aninhada)
+        if (bindingResult.hasErrors()) {
+            // Se houver erros, retorna o formulário para exibir as mensagens.
+            // O Spring automaticamente adiciona o 'usuario' com erros de volta ao modelo.
             model.addAttribute("tiposUsuario", TipoUsuario.values());
             return "admin/cadastrar_usuario :: formularioUsuario";
         }
 
         try {
-            // Salva a Pessoa primeiro
-            Pessoa pessoaSalva = pessoaService.salvar(pessoa);
-            // Associa a Pessoa ao Usuário
+            // 2. Lógica de Negócio: Salva as entidades
+            // Extrai a pessoa do objeto usuário para salvá-la primeiro.
+            Pessoa pessoaParaSalvar = usuario.getPessoa();
+            Pessoa pessoaSalva = pessoaService.salvar(pessoaParaSalvar);
+
+            // Atribui a pessoa salva (agora com um 'codigo') de volta ao usuário e salva o usuário.
             usuario.setPessoa(pessoaSalva);
-            // Salva o Usuário
             usuarioService.salvar(usuario);
+
         } catch (RegraNegocioException e) {
-            // Se o Service lançar um erro (ex: CPF duplicado, nome de usuário duplicado), adicione o erro ao BindingResult
-            // e retorne para a tela de formulário para exibir a mensagem.
-            if (e.getMessage().contains("CPF")) {
-                bindingResultPessoa.rejectValue("cpf", "error.pessoa", e.getMessage());
+            // 3. Trata exceções de regras de negócio (ex: CPF ou usuário duplicado)
+            // Adiciona o erro ao BindingResult para ser exibido no campo correto do formulário.
+            if (e.getMessage().toLowerCase().contains("cpf")) {
+                bindingResult.rejectValue("pessoa.cpf", "error.pessoa", e.getMessage());
             } else {
-                bindingResultUsuario.rejectValue("nomeUsuario", "error.usuario", e.getMessage());
+                bindingResult.rejectValue("nomeUsuario", "error.usuario", e.getMessage());
             }
+
+            // Retorna ao formulário com a mensagem de erro da exceção.
             model.addAttribute("tiposUsuario", TipoUsuario.values());
             return "admin/cadastrar_usuario :: formularioUsuario";
         }
 
-        // Se tudo deu certo, redirecione para outra página (como a lista de usuários) via HTMX.
-        // Isso evita o reenvio do formulário se o usuário atualizar a página (Padrão Post-Redirect-Get).
+        // 4. Sucesso: Redireciona via HTMX
+        // Se tudo correu bem, envia o header para o HTMX fazer o redirecionamento da página.
         response.setHeader("HX-Redirect", "/admin/usuarios");
-
-        return ""; // Retorna string vazia para o HTMX seguir o HX-Redirect
+        return ""; // Retorna corpo vazio, pois o HTMX cuidará do redirecionamento.
     }
 
     // Métodos de edição e exclusão (já existentes ou a serem adicionados)
