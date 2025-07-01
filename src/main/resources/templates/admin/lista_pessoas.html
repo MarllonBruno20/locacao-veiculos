@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR" layout:decorate="~{layout/layoutpadrao}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title th:text="${titulo}"></title>
+</head>
+<body>
+
+<main layout:fragment="conteudo" id="lista-pessoas-container">
+
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">
+            Gerenciamento de Pessoas
+        </h1>
+        <a th:href="@{/admin/pessoas/novo}"
+           hx-get="@{/admin/pessoas/novo}"
+           hx-target="#lista-pessoas-container"
+           hx-swap="outerHTML"
+           hx-push-url="true"
+           class="px-5 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transform hover:-translate-y-0.5 transition-all duration-300">
+            Adicionar Nova Pessoa
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Código
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Nome
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    CPF
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Telefone
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Ações
+                </th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            <tr th:each="pessoa : ${pessoas}" th:id="|pessoa-row-${pessoa.codigo}|">
+                <td class="px-6 py-4 whitespace-nowrap" th:text="${pessoa.codigo}"></td>
+                <td class="px-6 py-4 whitespace-nowrap" th:text="${pessoa.nome}"></td>
+                <td class="px-6 py-4 whitespace-nowrap" th:text="${pessoa.cpf}"></td>
+                <td class="px-6 py-4 whitespace-nowrap" th:text="${pessoa.telefone}"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <a th:href="@{/admin/pessoas/editar/{codigo}(codigo=${pessoa.codigo})}"
+                       hx-get="@{/admin/pessoas/editar/{codigo}(codigo=${pessoa.codigo})}"
+                       hx-target="#lista-pessoas-container"
+                       hx-swap="outerHTML"
+                       hx-push-url="true"
+                       class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
+                    <button th:hx-post="@{/admin/pessoas/deletar/{codigo}(codigo=${pessoa.codigo})}"
+                            hx-confirm="Tem certeza que deseja deletar esta pessoa? Isso pode afetar usuários vinculados!"
+                            hx-target="#lista-pessoas-container"
+                            hx-swap="outerHTML"
+                            hx-on::after-request="if(event.detail.target.htmx.triggerSpec.trigger === 'pessoaDeletada') { window.location.reload(); } else { alert('Erro: ' + JSON.parse(event.detail.target.htmx.triggerSpec.trigger).mensagemErro); }"
+                            class="text-red-600 hover:text-red-900">Deletar</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>
