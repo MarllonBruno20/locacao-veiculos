@@ -7,7 +7,7 @@ import br.com.daw1.locacaoveiculos.model.enums.TipoUsuario;
 import br.com.daw1.locacaoveiculos.service.PessoaService;
 import br.com.daw1.locacaoveiculos.service.UsuarioService;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse; // Importação adicionada
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.Optional; // Importação adicionada
 
 @Controller
 @RequestMapping("/admin/usuarios")
@@ -30,7 +30,7 @@ public class AdminUsuarioController {
     public String listarUsuarios(Model model) {
         model.addAttribute("usuarios", usuarioService.listarTodos());
         model.addAttribute("titulo", "Gerenciar Usuários");
-        return "admin/lista_usuarios"; // Você precisará criar esta view
+        return "admin/lista_usuarios";
     }
 
     @HxRequest
@@ -39,7 +39,7 @@ public class AdminUsuarioController {
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("pessoa", new Pessoa());
         model.addAttribute("tiposUsuario", TipoUsuario.values());
-        return "admin/cadastrar_usuario :: formularioUsuario"; // Você precisará criar esta view
+        return "admin/cadastrar_usuario :: formularioUsuario";
     }
 
     @HxRequest
@@ -49,7 +49,7 @@ public class AdminUsuarioController {
                                 @Valid @ModelAttribute("pessoa") Pessoa pessoa,
                                 BindingResult bindingResultPessoa,
                                 Model model,
-                                HttpServletResponse response) {
+                                HttpServletResponse response) { // HttpServletResponse adicionado
 
         // Verificar erros de validação da Pessoa ou Usuário
         if (bindingResultPessoa.hasErrors() || bindingResultUsuario.hasErrors()) {
@@ -65,7 +65,8 @@ public class AdminUsuarioController {
             // Salva o Usuário
             usuarioService.salvar(usuario);
         } catch (RegraNegocioException e) {
-            // Adicionar erro de regra de negócio (ex: CPF duplicado, nome de usuário duplicado)
+            // Se o Service lançar um erro (ex: CPF duplicado, nome de usuário duplicado), adicione o erro ao BindingResult
+            // e retorne para a tela de formulário para exibir a mensagem.
             if (e.getMessage().contains("CPF")) {
                 bindingResultPessoa.rejectValue("cpf", "error.pessoa", e.getMessage());
             } else {
@@ -75,11 +76,14 @@ public class AdminUsuarioController {
             return "admin/cadastrar_usuario :: formularioUsuario";
         }
 
-        response.setHeader("HX-Redirect", "/admin/usuarios"); // Redireciona para a lista de usuários
-        return ""; // HTMX espera uma string vazia para redirecionar via HX-Redirect
+        // Se tudo deu certo, redirecione para outra página (como a lista de usuários) via HTMX.
+        // Isso evita o reenvio do formulário se o usuário atualizar a página (Padrão Post-Redirect-Get).
+        response.setHeader("HX-Redirect", "/admin/usuarios");
+
+        return ""; // Retorna string vazia para o HTMX seguir o HX-Redirect
     }
 
-    // Métodos para edição e exclusão serão adicionados depois
+    // Métodos de edição e exclusão (já existentes ou a serem adicionados)
     @HxRequest
     @GetMapping("/editar/{codigo}")
     public String mostrarFormularioEdicaoUsuario(@PathVariable Long codigo, Model model) {

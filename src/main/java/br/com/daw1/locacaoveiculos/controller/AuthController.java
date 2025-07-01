@@ -10,9 +10,6 @@ public class AuthController {
 
     @GetMapping("/login")
     public String showLoginForm() {
-        return "public/login"; // Você precisará criar esta view
+        return "public/login"; // Certifique-se que o caminho da sua view de login está correto
     }
-
-    // Em uma aplicação Spring Security, o POST de login é geralmente tratado pelo próprio Spring Security
-    // Você não precisa de um @PostMapping para /login aqui, a menos que esteja implementando a segurança manualmente.
 }

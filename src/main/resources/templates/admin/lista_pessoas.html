@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR" layout:decorate="~{layout/layoutpadrao}" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-    <title th:text="${titulo}"></title>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:remove="tag">
+    <title th:text="${titulo}">Gerenciamento de Pessoas</title>
 </head>
-<body>
+<body th:remove="tag">
 
-<main layout:fragment="conteudo" id="lista-pessoas-container">
+<main th:fragment="conteudo" id="lista-pessoas-container">
 
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">
@@ -68,6 +67,8 @@
         </table>
     </div>
 </main>
+
+<script src="/js/delete_events.js" th:src="@{/js/delete_events.js}" defer></script>
 
 </body>
 </html>

@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR" layout:decorate="~{layout/layoutpadrao}" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:remove="tag">
     <title>Login</title>
 </head>
-<body>
-<main layout:fragment="conteudo" class="flex items-center justify-center min-h-screen bg-gray-100">
+<body th:remove="tag">
+<main th:fragment="conteudo" class="flex items-center justify-center min-h-screen bg-gray-100">
     <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
         <h2 class="text-3xl font-bold text-center text-gray-800">Entrar na Conta</h2>
         <p class="text-center text-gray-600">Bem-vindo de volta! Faça login para continuar.</p>
@@ -41,7 +40,7 @@
             Não tem uma conta?
             <a th:href="@{/admin/usuarios/novo}"
                hx-get="@{/admin/usuarios/novo}"
-               hx-target="body"
+               hx-target="#main-content"
                hx-swap="innerHTML"
                hx-push-url="true"
                class="font-medium text-blue-600 hover:text-blue-500">Cadastre-se</a>

@@ -1,12 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-BR" layout:decorate="~{layout/layoutpadrao}" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-    <title th:text="${titulo}"></title>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:remove="tag"> <title th:text="${titulo}"></title>
 </head>
-<body>
-
-<main layout:fragment="conteudo" id="lista-usuarios-container">
+<body th:remove="tag"> <main th:fragment="conteudo" id="lista-usuarios-container">
 
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">
@@ -47,7 +43,8 @@
             <tr th:each="usuario : ${usuarios}" th:id="|usuario-row-${usuario.codigo}|">
                 <td class="px-6 py-4 whitespace-nowrap" th:text="${usuario.codigo}"></td>
                 <td class="px-6 py-4 whitespace-nowrap" th:text="${usuario.nomeUsuario}"></td>
-                <td class="px-6 py-4 whitespace-nowrap" th:text="${usuario.pessoa?.nome}"></td> <td class="px-6 py-4 whitespace-nowrap" th:text="${usuario.tipo}"></td>
+                <td class="px-6 py-4 whitespace-nowrap" th:text="${usuario.pessoa?.nome}"></td>
+                <td class="px-6 py-4 whitespace-nowrap" th:text="${usuario.tipo}"></td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <a th:href="@{/admin/usuarios/editar/{codigo}(codigo=${usuario.codigo})}"
                        hx-get="@{/admin/usuarios/editar/{codigo}(codigo=${usuario.codigo})}"
@@ -66,15 +63,10 @@
             </tbody>
         </table>
     </div>
+
 </main>
 
-<script>
-    document.body.addEventListener('usuarioDeletado', function(evt) {
-        // Recarregar a lista de usuários após a deleção para refletir a mudança
-        // Isso pode ser feito via HTMX novamente ou um window.location.reload()
-        window.location.reload();
-    });
-</script>
+<script src="/js/delete_events.js" th:src="@{/js/delete_events.js}" defer></script>
 
 </body>
 </html>
