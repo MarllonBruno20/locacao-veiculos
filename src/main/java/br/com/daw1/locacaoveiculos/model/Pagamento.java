@@ -19,7 +19,7 @@ public class Pagamento implements Serializable {
     @Id
     @SequenceGenerator(name="gerador_pagamento", sequenceName="pagamento_codigo_seq", allocationSize=1)
     @GeneratedValue(generator="gerador_pagamento", strategy= GenerationType.SEQUENCE)
-    private long codigo;
+    private Long codigo;
 
     @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
