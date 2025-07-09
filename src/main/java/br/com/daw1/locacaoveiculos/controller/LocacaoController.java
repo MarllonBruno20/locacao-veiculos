@@ -1,9 +1,12 @@
 package br.com.daw1.locacaoveiculos.controller;
 
 import br.com.daw1.locacaoveiculos.model.RascunhoLocacaoDTO;
+import br.com.daw1.locacaoveiculos.model.Veiculo;
 import br.com.daw1.locacaoveiculos.model.enums.LocaisRetiradaDevolucao;
+import br.com.daw1.locacaoveiculos.service.VeiculoService;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +14,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/locacao")
 public class LocacaoController {
+
+    @Autowired
+    private VeiculoService veiculoService;
 
     @GetMapping("/nova")
     public String iniciarNovaLocacao(HttpSession session, Model model) {
@@ -56,8 +64,8 @@ public class LocacaoController {
         session.setAttribute("rascunhoLocacao", rascunho);
 
         // Prepara os dados para a próxima etapa (a lista de veículos disponíveis)
-        // List<Veiculo> veiculos = veiculoService.listarTodosDisponiveis(rascunho.getDataRetirada(), ...);
-        // model.addAttribute("veiculos", veiculos);
+        List<Veiculo> veiculos = veiculoService.listarVeiculosDisponiveisParaPeriodo(rascunho.getDataRetirada(), rascunho.getDataDevolucao());
+        model.addAttribute("veiculos", veiculos);
 
         // Retorna o fragmento da PRÓXIMA etapa (Etapa 2)
         return "public/locacao-fragments :: etapa2";

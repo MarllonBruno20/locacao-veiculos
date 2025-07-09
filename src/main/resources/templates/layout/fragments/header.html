@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:x-transition="http://www.w3.org/1999/xhtml" xmlns:hx-on="http://www.w3.org/1999/xhtml">
+<html lang="pt-br" xmlns:x-transition="http://www.w3.org/1999/xhtml" xmlns:hx-on="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,8 +71,14 @@
                         Veículos
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
-                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" href="#">
-                        Contato
+                    <a th:href="@{/locacao/nova}"
+                       th:hx-get="@{/locacao/nova}"
+                       hx-target="body"
+                       hx-swap="outerHTML"
+                       hx-push-url="true"
+                       class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group">
+
+                        <span>Fazer Reserva</span>
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
                 </div>

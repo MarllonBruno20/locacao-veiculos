@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="etapa1">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Quando e onde você precisa do veículo?</h2>
+
+    <form th:object="${rascunho}"
+          th:hx-post="@{/locacao/etapa1}"
+          hx-target="#wizard-content"
+          hx-swap="innerHTML"
+          hx-indicator=".htmx-indicator">
+
+        <div class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="dataRetirada" class="block text-sm font-medium text-gray-700">Data de Retirada</label>
+                    <input type="date" id="dataRetirada" th:field="*{dataRetirada}" required
+                           th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="dataDevolucao" class="block text-sm font-medium text-gray-700">Data de Devolução</label>
+                    <input type="date" id="dataDevolucao" th:field="*{dataDevolucao}" required
+                           th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="localRetirada" class="block text-sm font-medium text-gray-700">Local de Retirada</label>
+                    <select id="localRetirada" th:field="*{localRetirada}" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">Selecione...</option>
+                        <option th:each="local : ${locais}" th:value="${local}" th:text="${local.nomeFormatado}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="localDevolucao" class="block text-sm font-medium text-gray-700">Local de Devolução</label>
+                    <select id="localDevolucao" th:field="*{localDevolucao}" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">Selecione...</option>
+                        <option th:each="local : ${locais}" th:value="${local}" th:text="${local.nomeFormatado}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="pt-6 text-right">
+                <button type="submit"
+                        class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Buscar Veículos Disponíveis
+                    <span class="htmx-indicator ml-2">
+                        <i class="fas fa-spinner fa-spin"></i> </span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div th:fragment="etapa2">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Passo 2: Escolha o seu veículo</h2>
+
+    <div th:if="${#lists.isEmpty(veiculos)}" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+        <p class="font-bold">Nenhum veículo disponível</p>
+        <p>Não encontramos veículos disponíveis para as datas e locais selecionados. Por favor, tente um período diferente.</p>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(veiculos)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div th:each="veiculo : ${veiculos}" class="bg-white rounded-lg border shadow-md overflow-hidden flex flex-col">
+            <img th:src="${veiculo.imageUrl}" class="w-full h-48 object-cover">
+            <div class="p-4 flex flex-col flex-grow">
+                <h3 class="font-bold text-xl mb-2" th:text="|${veiculo.marca} ${veiculo.modelo}|"></h3>
+                <p class="text-gray-600 text-sm mb-4" th:text="${veiculo.categoria}"></p>
+                <div class="mt-auto">
+                    <form th:hx-post="@{/locacao/etapa2}" hx-target="#wizard-content">
+                        <input type="hidden" name="codigoVeiculo" th:value="${veiculo.codigo}" />
+                        <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            Escolher Este
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
