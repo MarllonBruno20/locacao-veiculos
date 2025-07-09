@@ -1,0 +1,32 @@
+<!-- src/main/resources/templates/admin/dashboard.html -->
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body class="bg-gray-50">
+
+<nav class="bg-white shadow border-b sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <a href="/" class="text-xl font-bold text-blue-600">AutoRent Admin</a>
+        <div class="flex space-x-6">
+            <a href="/" class="text-gray-700 hover:text-blue-600">Início</a>
+            <a href="/admin/veiculos/novo" th:attr="hx-get=@{/admin/veiculos/novo}" hx-target="#main-content" hx-swap="innerHTML" class="text-gray-700 hover:text-blue-600">Cadastrar Veículo</a>
+            <a href="/admin/pessoas" th:attr="hx-get=@{/admin/pessoas}" hx-target="#main-content" hx-swap="innerHTML" class="text-gray-700 hover:text-blue-600">Gerenciar Pessoas</a>
+            <a href="/admin/usuarios" th:attr="hx-get=@{/admin/usuarios}" hx-target="#main-content" hx-swap="innerHTML" class="text-gray-700 hover:text-blue-600">Gerenciar Usuários</a>
+            <a href="/admin/locacoes" th:attr="hx-get=@{/admin/locacoes}" hx-target="#main-content" hx-swap="innerHTML" class="text-gray-700 hover:text-blue-600">Gerenciar Locações</a>
+            <a href="/auth/logout" class="text-red-600 hover:text-red-800">Sair</a>
+        </div>
+    </div>
+</nav>
+
+<main id="main-content" class="p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Bem-vindo(a) ao Painel Administrativo</h1>
+    <!-- Conteúdo dinâmico via HTMX será inserido aqui -->
+</main>
+
+</body>
+</html>

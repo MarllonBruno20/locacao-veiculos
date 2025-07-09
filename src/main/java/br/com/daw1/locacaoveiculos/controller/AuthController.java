@@ -1,6 +1,7 @@
 package br.com.daw1.locacaoveiculos.controller;
 
 import br.com.daw1.locacaoveiculos.model.Usuario;
+import br.com.daw1.locacaoveiculos.model.enums.TipoUsuario;
 import br.com.daw1.locacaoveiculos.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +23,22 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String processLogin(@RequestParam String username,
-                               @RequestParam String password,
-                               HttpSession session,
-                               Model model) {
+    public String login(@RequestParam String username,
+                        @RequestParam String password,
+                        HttpSession session,
+                        Model model) {
 
         Usuario user = usuarioService.autenticar(username, password);
 
         if (user != null) {
             session.setAttribute("usuarioLogado", user);
-            return "redirect:/home"; // ou /admin, /cliente, etc.
+
+            // Redireciona baseado no tipo do usuário
+            if (user.getTipo() == TipoUsuario.ADMINISTRADOR) {
+                return "redirect:/admin";
+            } else {
+                return "redirect:/cliente";
+            }
         } else {
             model.addAttribute("erro", "Usuário ou senha inválidos.");
             return "public/login";
@@ -41,6 +48,13 @@ public class AuthController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/auth/login";
+        return "redirect:/";
     }
+
+    // @GetMapping("/logout")
+    // public String logout(HttpSession session) {
+    //     session.invalidate();
+    //     return "redirect:/";
+    // }
+
 }
