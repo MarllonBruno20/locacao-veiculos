@@ -8,6 +8,7 @@ import br.com.daw1.locacaoveiculos.service.PessoaService;
 import br.com.daw1.locacaoveiculos.service.UsuarioService;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import jakarta.servlet.http.HttpServletResponse; // Importação adicionada
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,12 +27,26 @@ public class AdminUsuarioController {
     @Autowired
     private PessoaService pessoaService;
 
+    //@GetMapping
+    //public String listarUsuarios(Model model) {
+    //    model.addAttribute("usuarios", usuarioService.listarTodos());
+    //    model.addAttribute("titulo", "Gerenciar Usuários");
+    //    return "admin/lista_usuarios";
+    //}
+
+
     @GetMapping
-    public String listarUsuarios(Model model) {
+    public String listarUsuarios(HttpSession session, Model model) {
+    Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
+        if (logado == null || logado.getTipo() != TipoUsuario.ADMINISTRADOR) {
+            return "redirect:/auth/login";
+        }
+
         model.addAttribute("usuarios", usuarioService.listarTodos());
         model.addAttribute("titulo", "Gerenciar Usuários");
         return "admin/lista_usuarios";
     }
+
 
     @HxRequest
     @GetMapping("/novo")
@@ -43,50 +58,37 @@ public class AdminUsuarioController {
     }
 
     @HxRequest
-    @PostMapping("/salvar")
-    public String salvarUsuario(
-            @Valid @ModelAttribute("usuario") Usuario usuario,
-            BindingResult bindingResult, // Apenas UM BindingResult para o objeto principal
-            Model model,
-            HttpServletResponse response) {
+@PostMapping("/salvar")
+public String salvarUsuario(
+        @Valid @ModelAttribute("usuario") Usuario usuario,
+        BindingResult bindingResult,
+        Model model) {
 
-        // 1. Verifica erros de validação (tanto de Usuario quanto da Pessoa aninhada)
-        if (bindingResult.hasErrors()) {
-            // Se houver erros, retorna o formulário para exibir as mensagens.
-            // O Spring automaticamente adiciona o 'usuario' com erros de volta ao modelo.
-            model.addAttribute("tiposUsuario", TipoUsuario.values());
-            return "admin/cadastrar_usuario :: formularioUsuario";
-        }
-
-        try {
-            // 2. Lógica de Negócio: Salva as entidades
-            // Extrai a pessoa do objeto usuário para salvá-la primeiro.
-            Pessoa pessoaParaSalvar = usuario.getPessoa();
-            Pessoa pessoaSalva = pessoaService.salvar(pessoaParaSalvar);
-
-            // Atribui a pessoa salva (agora com um 'codigo') de volta ao usuário e salva o usuário.
-            usuario.setPessoa(pessoaSalva);
-            usuarioService.salvar(usuario);
-
-        } catch (RegraNegocioException e) {
-            // 3. Trata exceções de regras de negócio (ex: CPF ou usuário duplicado)
-            // Adiciona o erro ao BindingResult para ser exibido no campo correto do formulário.
-            if (e.getMessage().toLowerCase().contains("cpf")) {
-                bindingResult.rejectValue("pessoa.cpf", "error.pessoa", e.getMessage());
-            } else {
-                bindingResult.rejectValue("nomeUsuario", "error.usuario", e.getMessage());
-            }
-
-            // Retorna ao formulário com a mensagem de erro da exceção.
-            model.addAttribute("tiposUsuario", TipoUsuario.values());
-            return "admin/cadastrar_usuario :: formularioUsuario";
-        }
-
-        // 4. Sucesso: Redireciona via HTMX
-        // Se tudo correu bem, envia o header para o HTMX fazer o redirecionamento da página.
-        response.setHeader("HX-Redirect", "/admin/usuarios");
-        return ""; // Retorna corpo vazio, pois o HTMX cuidará do redirecionamento.
+    if (bindingResult.hasErrors()) {
+        model.addAttribute("tiposUsuario", TipoUsuario.values());
+        return "admin/cadastrar_usuario :: formularioUsuario";
     }
+
+    try {
+        Pessoa pessoaParaSalvar = usuario.getPessoa();
+        Pessoa pessoaSalva = pessoaService.salvar(pessoaParaSalvar);
+
+        usuario.setPessoa(pessoaSalva);
+        usuarioService.salvar(usuario);
+
+    } catch (RegraNegocioException e) {
+        if (e.getMessage().toLowerCase().contains("cpf")) {
+            bindingResult.rejectValue("pessoa.cpf", "error.pessoa", e.getMessage());
+        } else {
+            bindingResult.rejectValue("nomeUsuario", "error.usuario", e.getMessage());
+        }
+        model.addAttribute("tiposUsuario", TipoUsuario.values());
+        return "admin/cadastrar_usuario :: formularioUsuario";
+    }
+
+    // ✅ Redireciona normalmente para carregar CSS e scripts
+    return "redirect:/admin/usuarios";
+}
 
     // Métodos de edição e exclusão (já existentes ou a serem adicionados)
     @HxRequest

@@ -6,8 +6,10 @@ import br.com.daw1.locacaoveiculos.model.Usuario;
 import br.com.daw1.locacaoveiculos.model.enums.TipoUsuario;
 import br.com.daw1.locacaoveiculos.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // import adicionado
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,21 +20,28 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // AVISO: Em um projeto real, você usaria um PasswordEncoder para criptografar a senha!
-    // Ex: import org.springframework.security.crypto.password.PasswordEncoder;
-    // @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder; // Encoder injetado
 
     public Usuario salvar(Usuario usuario) {
-        // Validação se o nome de usuário já existe
+        // Verifica se já existe um usuário com o mesmo nome
         Optional<Usuario> usuarioExistente = usuarioRepository.findByNomeUsuario(usuario.getNomeUsuario());
         if (usuarioExistente.isPresent() && !usuarioExistente.get().getCodigo().equals(usuario.getCodigo())) {
             throw new RegraNegocioException("Nome de usuário já existe.");
         }
 
-        // AVISO: Criptografar a senha antes de salvar!
-        // usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        // Criptografa a senha se for novo usuário ou senha nova
+        if (usuario.getCodigo() == null || !usuario.getSenha().equals(usuarioExistente.map(Usuario::getSenha).orElse(""))) {
+            usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        }
 
         return usuarioRepository.save(usuario);
+    }
+
+    public Usuario autenticar(String nomeUsuario, String senhaDigitada) {
+        return usuarioRepository.findByNomeUsuario(nomeUsuario)
+                .filter(u -> passwordEncoder.matches(senhaDigitada, u.getSenha()))
+                .orElse(null);
     }
 
     public List<Usuario> listarTodos() {
@@ -51,13 +60,9 @@ public class UsuarioService {
         usuarioRepository.deleteById(codigo);
     }
 
-    // Método para o administrador cadastrar novos usuários (incluindo admins)
     public Usuario cadastrarNovoUsuarioPorAdmin(Usuario usuario) {
-        // Aqui você pode adicionar lógica específica para admin,
-        // como forçar o TipoUsuario a ser CLIENTE se não for explicitamente ADMINISTRADOR
-        // ou permitir que o admin defina o tipo.
         if (usuario.getTipo() == null) {
-            usuario.setTipo(TipoUsuario.CLIENTE); // Default se não for especificado
+            usuario.setTipo(TipoUsuario.CLIENTE);
         }
         return salvar(usuario);
     }

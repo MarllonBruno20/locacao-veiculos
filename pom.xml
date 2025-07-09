@@ -109,9 +109,10 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-aop</artifactId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+			
 	</dependencies>
 
 	<build>
