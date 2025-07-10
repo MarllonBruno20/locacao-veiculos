@@ -38,7 +38,7 @@ public class Locacao implements Serializable {
     @JoinColumn(name = "codigo_usuario")
     private Usuario usuario;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "codigo_pagamento")
     private Pagamento pagamento;
 

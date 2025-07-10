@@ -76,7 +76,18 @@
 
 
 <div th:fragment="conteudo-etapa2">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Passo 2: Escolha o seu veículo</h2>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Passo 2: Escolha o seu veículo</h2>
+
+        <a href="#"
+           hx-get="/locacao/etapa1"
+           hx-target="#wizard-content"
+           hx-swap="innerHTML"
+           class="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center">
+            <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            Voltar para Datas e Locais
+        </a>
+    </div>
 
     <div th:if="${#lists.isEmpty(veiculos)}" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
         <p class="font-bold">Nenhum veículo disponível</p>
@@ -126,12 +137,23 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
 <div th:fragment="conteudo-etapa3">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Passo 3: Resumo e Confirmação</h2>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Passo 3: Resumo e Confirmação</h2>
+
+        <a href="#"
+           th:hx-get="@{/locacao/voltar-para-etapa2}"
+           hx-target="#wizard-content"
+           hx-swap="innerHTML"
+           hx-indicator=".htmx-indicator"
+           class="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center">
+            <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            Voltar para Escolha do Veículo
+        </a>
+    </div>
 
     <div class="bg-gray-50 border rounded-lg p-6 space-y-6">
 
@@ -185,6 +207,21 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="etapa-sucesso">
+    <div class="text-center p-8">
+        <i class="fas fa-check-circle text-green-500 text-6xl mb-4"></i> <h2 class="text-3xl font-bold text-gray-800">Solicitação Enviada!</h2>
+        <p class="text-gray-600 mt-2 max-w-md mx-auto">
+            Sua solicitação de locação (código <b th:text="${locacao.codigo}">#123</b>) foi enviada com sucesso.
+            Você pode acompanhar o andamento da solicitação na aba "Minhas Solicitações".
+        </p>
+        <div class="mt-8">
+            <a th:href="@{/}" class="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
+                Voltar para a Página Inicial
+            </a>
         </div>
     </div>
 </div>

@@ -1,20 +1,22 @@
 package br.com.daw1.locacaoveiculos.controller;
 
 import br.com.daw1.locacaoveiculos.exception.RegraNegocioException;
+import br.com.daw1.locacaoveiculos.model.Locacao;
 import br.com.daw1.locacaoveiculos.model.RascunhoLocacaoDTO;
+import br.com.daw1.locacaoveiculos.model.Usuario;
 import br.com.daw1.locacaoveiculos.model.Veiculo;
 import br.com.daw1.locacaoveiculos.model.enums.FormaPagamento;
 import br.com.daw1.locacaoveiculos.model.enums.LocaisRetiradaDevolucao;
+import br.com.daw1.locacaoveiculos.repository.UsuarioRepository;
+import br.com.daw1.locacaoveiculos.service.LocacaoService;
 import br.com.daw1.locacaoveiculos.service.VeiculoService;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,6 +30,12 @@ public class LocacaoController {
 
     @Autowired
     private VeiculoService veiculoService;
+
+    @Autowired
+    private LocacaoService locacaoService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @GetMapping("/nova")
     public String iniciarNovaLocacao(HttpSession session, Model model) {
@@ -53,7 +61,8 @@ public class LocacaoController {
     // É chamado quando o usuário clica em "Avançar" no formulário da Etapa 1.
     @HxRequest
     @PostMapping("/etapa1")
-    public String processarEtapa1(@ModelAttribute RascunhoLocacaoDTO dadosEtapa1, HttpSession session, Model model) {
+    public String processarEtapa1(@ModelAttribute RascunhoLocacaoDTO dadosEtapa1, HttpSession session,
+                                  Model model, HttpServletResponse response) {
         // Recupera o rascunho da sessão
         RascunhoLocacaoDTO rascunho = (RascunhoLocacaoDTO) session.getAttribute("rascunhoLocacao");
         if (rascunho == null) {
@@ -84,6 +93,10 @@ public class LocacaoController {
         List<Veiculo> veiculos = veiculoService.listarVeiculosDisponiveisParaPeriodo(inicioRealDaLocacao, fimRealDaLocacao);
         model.addAttribute("veiculos", veiculos);
 
+        // --- A MUDANÇA ESTÁ AQUI ---
+        // Instrui o HTMX a mudar a URL na barra de endereço do navegador para a URL da Etapa 2
+        response.setHeader("HX-Push-Url", "/locacao/etapa2");
+
         // Retorna o fragmento da PRÓXIMA etapa (Etapa 2)
         return "public/locacao-fragments :: resposta-etapa2";
     }
@@ -91,7 +104,8 @@ public class LocacaoController {
     // --- MÉTODO PARA PROCESSAR A ETAPA 2 E PREPARAR A ETAPA 3 ---
     @HxRequest
     @PostMapping("/etapa2")
-    public String processarEtapa2(@ModelAttribute RascunhoLocacaoDTO dadosEtapa2, HttpSession session, Model model) {
+    public String processarEtapa2(@ModelAttribute RascunhoLocacaoDTO dadosEtapa2, HttpSession session,
+                                  Model model, HttpServletResponse response) {
         // 1. Recupera o rascunho da sessão.
         RascunhoLocacaoDTO rascunho = (RascunhoLocacaoDTO) session.getAttribute("rascunhoLocacao");
         if (rascunho == null) {
@@ -123,8 +137,120 @@ public class LocacaoController {
         model.addAttribute("rascunho", rascunho);
         model.addAttribute("formasDePagamento", FormaPagamento.values()); // Para o <select> de pagamento
 
+        // --- A MUDANÇA ESTÁ AQUI ---
+        // Instrui o HTMX a mudar a URL para a URL da Etapa 3
+        response.setHeader("HX-Push-Url", "/locacao/etapa3");
+
         // 6. Retorna os fragmentos da Etapa 3 (conteúdo do resumo + indicador de progresso).
         return "public/locacao-fragments :: resposta-etapa3";
+    }
+
+    @HxRequest
+    @GetMapping("/voltar-para-etapa2")
+    public String voltarParaEtapa2(HttpSession session, Model model, HttpServletResponse response) {
+
+        // 1. Recupera o rascunho da sessão para obter as datas.
+        RascunhoLocacaoDTO rascunho = (RascunhoLocacaoDTO) session.getAttribute("rascunhoLocacao");
+
+        // 2. Segurança: se não houver rascunho ou datas, reinicia o fluxo.
+        if (rascunho == null || rascunho.getDataRetirada() == null) {
+            response.setHeader("HX-Redirect", "/locacao/nova");
+            return "";
+        }
+
+        // 3. Re-executa a lógica de busca de veículos que estava no 'processarEtapa1'
+        LocalDateTime inicioRealDaLocacao = rascunho.getDataRetirada().atTime(14, 0);
+        LocalDateTime fimRealDaLocacao = rascunho.getDataDevolucao().atTime(12, 0);
+
+        List<Veiculo> veiculos = veiculoService.listarVeiculosDisponiveisParaPeriodo(inicioRealDaLocacao, fimRealDaLocacao);
+        model.addAttribute("veiculos", veiculos);
+
+        // 4. Retorna o pacote de fragmentos da Etapa 2 (conteúdo + indicador de progresso)
+        return "public/locacao-fragments :: resposta-etapa2";
+    }
+
+
+    @HxRequest
+    @PostMapping("/finalizar")
+    public String finalizarLocacao(@ModelAttribute RascunhoLocacaoDTO dadosFinaisDoForm,
+            HttpSession session, Model model) {
+
+        // 1. Recupera o rascunho final da sessão
+        RascunhoLocacaoDTO rascunho = (RascunhoLocacaoDTO) session.getAttribute("rascunhoLocacao");
+        if (rascunho == null) {
+            // Se a sessão expirou ou o usuário não está logado, reinicia o processo.
+            return "redirect:/locacao/nova";
+        }
+
+        rascunho.setFormaPagamento(dadosFinaisDoForm.getFormaPagamento());
+
+        try {
+            // 2. Chama o service para criar a locação permanente no banco
+            Locacao locacaoFinalizada = locacaoService.criarLocacaoAPartirDeRascunho(rascunho);
+
+            // 3. Limpeza Crucial: Remove o rascunho da sessão para liberar memória
+            // e impedir que o usuário reenvie o mesmo pedido.
+            session.removeAttribute("rascunhoLocacao");
+
+            // 4. Prepara o model para a tela de sucesso
+            model.addAttribute("locacao", locacaoFinalizada);
+            return "public/locacao-fragments :: etapa-sucesso";
+
+        } catch (RegraNegocioException e) {
+            // Em caso de erro, exibe a mensagem para o usuário
+            model.addAttribute("erro", e.getMessage());
+            // Retorna para a etapa anterior
+            model.addAttribute("rascunho", rascunho);
+            model.addAttribute("formasDePagamento", FormaPagamento.values());
+            return "public/locacao-fragments :: etapa3";
+        }
+    }
+
+    @GetMapping("/minhas-locacoes")
+    public String mostrarMinhasLocacoes(Model model) {
+
+        Usuario usuarioLogado = usuarioRepository.findById(1L)
+                .orElseThrow(() -> new RegraNegocioException("Usuário logado inválido."));
+
+        // 1. O Spring Security injeta o usuário logado diretamente com @AuthenticationPrincipal
+        //    (requer configuração no seu UserDetailsService).
+        if (usuarioLogado == null) {
+            // Se, por algum motivo, o usuário não estiver logado, redireciona para o login.
+            return "redirect:/login";
+        }
+
+        // 2. Busca as locações específicas deste usuário.
+        List<Locacao> minhasLocacoes = locacaoService.listarPorUsuario(usuarioLogado);
+
+        // 3. Adiciona os dados ao Model.
+        model.addAttribute("locacoes", minhasLocacoes);
+        model.addAttribute("titulo", "Minhas Locações");
+
+        // 4. Retorna a nova view.
+        return "public/minhas-locacoes";
+    }
+
+    @GetMapping("/detalhes/{id}")
+    public String mostrarDetalhesLocacao(@PathVariable("id") Long locacaoId,
+                                         Model model) {
+
+        Usuario usuarioLogado = usuarioRepository.findById(1L)
+                .orElseThrow(() -> new RegraNegocioException("Usuário logado inválido."));
+
+        if (usuarioLogado == null) {
+            return "redirect:/login";
+        }
+
+        // 1. Chama o serviço seguro, que já verifica a posse da locação.
+        Locacao locacao = locacaoService.buscarPorIdEUsuario(locacaoId, usuarioLogado)
+                .orElseThrow(() -> new RegraNegocioException("Locação não encontrada ou não pertence a você."));
+
+        // 2. Adiciona a locação e o título ao Model.
+        model.addAttribute("locacao", locacao);
+        model.addAttribute("titulo", "Detalhes da Locação #" + locacao.getCodigo());
+
+        // 3. Retorna a nova view de detalhes.
+        return "public/detalhe-locacao";
     }
 
 }
