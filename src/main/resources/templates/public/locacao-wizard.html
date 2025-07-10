@@ -6,14 +6,6 @@
 </head>
 <body>
 <main layout:fragment="conteudo" class="max-w-4xl mx-auto">
-    <div id="indicador-progresso" class="text-center mb-8 p-4 bg-white rounded-lg shadow">
-        <span class="font-bold text-blue-600 ring-2 ring-blue-500 rounded-full px-3 py-1">[1] Datas e Locais</span>
-        <span class="text-gray-400 font-semibold">&rarr;</span>
-        <span class="text-gray-400 font-semibold">[2] Escolha do Veículo</span>
-        <span class="text-gray-400 font-semibold">&rarr;</span>
-        <span class="text-gray-400 font-semibold">[3] Resumo e Pagamento</span>
-    </div>
-
     <div id="wizard-content"
          hx-get="/locacao/etapa1"
          hx-trigger="load"

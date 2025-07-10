@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Long> {
      @Query(value = """
         SELECT T1.*
         FROM veiculo T1
-        WHERE T1.status_locacao = 'ATIVO'
+        WHERE T1.status = 'ATIVO'
         AND T1.codigo NOT IN (
             SELECT T2.codigo_veiculo
             FROM locacao T2
@@ -34,8 +35,8 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Long> {
         ORDER BY T1.valor_diaria ASC
     """, nativeQuery = true)
      List<Veiculo> findVeiculosDisponiveisNoPeriodo(
-             @Param("data_inicio_desejada") LocalDate dataInicio,
-             @Param("data_fim_desejada") LocalDate dataFim
+             @Param("data_inicio_desejada") LocalDateTime dataInicio,
+             @Param("data_fim_desejada") LocalDateTime dataFim
      );
 
 }

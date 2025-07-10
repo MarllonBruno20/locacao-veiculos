@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +73,7 @@ public class VeiculoService {
         return veiculoRepository.save(veiculo);
     }
 
-    public List<Veiculo> listarVeiculosDisponiveisParaPeriodo(LocalDate dataInicio, LocalDate dataFim) {
+    public List<Veiculo> listarVeiculosDisponiveisParaPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) {
 
         // --- GUARDIÃO DAS REGRAS DE NEGÓCIO ---
 
@@ -87,7 +88,7 @@ public class VeiculoService {
         }
 
         // 3. Validação de datas no passado
-        if (dataInicio.isBefore(LocalDate.now())) {
+        if (dataInicio.isBefore(LocalDateTime.now())) {
             throw new RegraNegocioException("A data de retirada não pode ser no passado.");
         }
 

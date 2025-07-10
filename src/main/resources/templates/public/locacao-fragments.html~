@@ -158,9 +158,7 @@
 
             <form th:object="${rascunho}"
                   th:hx-post="@{/locacao/finalizar}"
-                  hx-target="#wizard-content"
-                  hx-swap="innerHTML"
-                  hx-indicator=".htmx-indicator">
+                  hx-target="#wizard-content">
 
                 <div class="flex items-end justify-between">
                     <div class="flex-grow pr-8">

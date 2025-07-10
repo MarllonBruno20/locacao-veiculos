@@ -23,6 +23,7 @@ public class RascunhoLocacaoDTO implements Serializable {
 
     private Long codigoVeiculo;
     private String nomeVeiculo;
+    private String placa;
 
     private BigDecimal valorTotal;
     private FormaPagamento formaPagamento;
