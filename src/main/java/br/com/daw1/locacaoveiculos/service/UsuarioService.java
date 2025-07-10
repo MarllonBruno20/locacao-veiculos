@@ -1,4 +1,3 @@
-// src/main/java/br/com/daw1/locacaoveiculos/service/UsuarioService.java
 package br.com.daw1.locacaoveiculos.service;
 
 import br.com.daw1.locacaoveiculos.exception.RegraNegocioException;
@@ -6,8 +5,10 @@ import br.com.daw1.locacaoveiculos.model.Usuario;
 import br.com.daw1.locacaoveiculos.model.enums.TipoUsuario;
 import br.com.daw1.locacaoveiculos.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,21 +19,36 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // AVISO: Em um projeto real, você usaria um PasswordEncoder para criptografar a senha!
-    // Ex: import org.springframework.security.crypto.password.PasswordEncoder;
-    // @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public Usuario salvar(Usuario usuario) {
-        // Validação se o nome de usuário já existe
+        // Verifica se já existe um usuário com o mesmo nome
         Optional<Usuario> usuarioExistente = usuarioRepository.findByNomeUsuario(usuario.getNomeUsuario());
         if (usuarioExistente.isPresent() && !usuarioExistente.get().getCodigo().equals(usuario.getCodigo())) {
             throw new RegraNegocioException("Nome de usuário já existe.");
         }
 
-        // AVISO: Criptografar a senha antes de salvar!
-        // usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        // Lógica para tratamento da senha durante a criação ou edição
+        if (usuario.getCodigo() == null || (usuario.getSenha() != null && !usuario.getSenha().isEmpty())) {
+            // Se for um novo usuário OU se uma nova senha foi fornecida (não nula e não vazia)
+            usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        } else if (usuario.getCodigo() != null && (usuario.getSenha() == null || usuario.getSenha().isEmpty())) {
+            // Se for uma edição de usuário existente E a senha fornecida estiver vazia/nula,
+            // significa que o usuário não quer alterar a senha.
+            // Neste caso, recuperamos a senha existente do banco de dados e a mantemos.
+            usuarioExistente.ifPresent(existingUser -> usuario.setSenha(existingUser.getSenha()));
+        }
+        // Se a senha for nula e for um novo usuário, o @NotBlank no modelo vai pegar.
+        // Se a senha for nula e for um usuário existente e não encontrada no optional, será tratado no controller ou na tela.
 
         return usuarioRepository.save(usuario);
+    }
+
+    public Usuario autenticar(String nomeUsuario, String senhaDigitada) {
+        return usuarioRepository.findByNomeUsuario(nomeUsuario)
+                .filter(u -> passwordEncoder.matches(senhaDigitada, u.getSenha()))
+                .orElse(null);
     }
 
     public List<Usuario> listarTodos() {
@@ -51,13 +67,9 @@ public class UsuarioService {
         usuarioRepository.deleteById(codigo);
     }
 
-    // Método para o administrador cadastrar novos usuários (incluindo admins)
     public Usuario cadastrarNovoUsuarioPorAdmin(Usuario usuario) {
-        // Aqui você pode adicionar lógica específica para admin,
-        // como forçar o TipoUsuario a ser CLIENTE se não for explicitamente ADMINISTRADOR
-        // ou permitir que o admin defina o tipo.
         if (usuario.getTipo() == null) {
-            usuario.setTipo(TipoUsuario.CLIENTE); // Default se não for especificado
+            usuario.setTipo(TipoUsuario.CLIENTE);
         }
         return salvar(usuario);
     }

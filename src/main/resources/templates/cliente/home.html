@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cliente | Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="/dist/output.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#3b82f6',
+                        'primary-dark': '#2563eb',
+                        'secondary': '#64748b'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+
+<nav class="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
+    <div class="container mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-xl shadow-lg">
+                    <i class="fas fa-car text-white text-xl"></i>
+                </div>
+                <a class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent hover:from-blue-700 hover:to-blue-900 transition-all duration-300" href="/cliente">
+                    AutoRent
+                </a>
+            </div>
+
+            <div class="hidden lg:flex lg:items-center lg:space-x-8">
+                <div class="flex items-center space-x-6">
+                    <a href="/cliente" class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group">
+                        Início
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="/veiculos/veiculos-disponiveis"
+                       th:attr="hx-get=@{/veiculos/veiculos-disponiveis}"
+                       hx-target="#main-content"
+                       hx-swap="innerHTML"
+                       class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group">
+                        Veículos
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="/cliente/locacoes"
+                       th:attr="hx-get=@{/cliente/locacoes}"
+                       hx-target="#main-content"
+                       hx-swap="innerHTML"
+                       class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group">
+                        Minhas Locações
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="/cliente/pagamentos"
+                       th:attr="hx-get=@{/cliente/pagamentos}"
+                       hx-target="#main-content"
+                       hx-swap="innerHTML"
+                       class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group">
+                        Pagamentos
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="/auth/logout"
+                       class="relative text-red-600 font-medium hover:text-red-700 transition-colors duration-300 group">
+                        Sair
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main id="main-content" class="p-8">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Bem-vindo(a) à área do cliente</h1>
+    <!-- Conteúdo dinâmico HTMX -->
+</main>
+
+<div th:replace="~{layout/fragments/footer :: footer}"></div>
+
+</body>
+</html>

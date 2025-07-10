@@ -1,0 +1,31 @@
+spring.application.name=locacao-veiculos
+
+# Configura��es de Locale
+spring.web.locale-resolver=fixed
+spring.web.locale=pt_BR
+
+# Configura��es do BD
+spring.datasource.url=jdbc:postgresql://localhost:5432/locacaoveiculos
+spring.datasource.username=postgres
+<<<<<<< HEAD
+spring.datasource.password=admin
+=======
+spring.datasource.password=jls2003
+>>>>>>> 44048823552e12010f16518e48fc226c1eab6c54
+
+spring.jpa.hibernate.ddl-auto=none
+
+# Para o desenvovlimento (com Hibernate)
+spring.jpa.properties.hibernate.use_sql_comments=true
+# Mostrar o SQL formatado
+spring.jpa.properties.hibernate.format_sql=true
+# Configurar o processamento em Batch quando poss�vel
+spring.jpa.properties.hibernate.jdbc.batch_size=25
+spring.jpa.properties.hibernate.order_inserts=true
+spring.jpa.properties.hibernate.order_updates=true
+
+# Para evitar que o Thymeleaf acesse o BD usando JPA durante o processamento da View
+spring.jpa.open-in-view=false
+
+# Para evitar a valida��o feita pela JPA
+spring.jpa.properties.jakarta.persistence.validation.mode=none

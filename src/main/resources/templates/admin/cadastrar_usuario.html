@@ -93,12 +93,10 @@
             </div>
 
             <div class="flex justify-center space-x-4 pt-4">
-                <a th:href="@{/admin/usuarios}"
-                   hx-get="@{/admin/usuarios}"
-                   hx-target="#form-usuario-container"
-                   hx-swap="outerHTML"
-                   hx-push-url="true"
-                   class="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
+               <a th:href="@{/admin/usuarios}"
+                    th:attr="hx-get='/admin/usuarios'"
+                    hx-target="#main-content" hx-swap="innerHTML"      hx-push-url="true"
+                    class="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
                     Cancelar
                 </a>
                 <button type="submit"
