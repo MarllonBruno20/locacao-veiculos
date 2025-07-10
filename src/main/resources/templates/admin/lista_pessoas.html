@@ -12,9 +12,8 @@
             Gerenciamento de Pessoas
         </h1>
         <a th:href="@{/admin/pessoas/novo}"
-           hx-get="@{/admin/pessoas/novo}"
-           hx-target="#lista-pessoas-container"
-           hx-swap="outerHTML"
+           th:attr="hx-get='/admin/pessoas/novo'"
+           hx-target="#main-content" hx-swap="innerHTML"
            hx-push-url="true"
            class="px-5 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transform hover:-translate-y-0.5 transition-all duration-300">
             Adicionar Nova Pessoa
@@ -50,9 +49,8 @@
                 <td class="px-6 py-4 whitespace-nowrap" th:text="${pessoa.telefone}"></td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <a th:href="@{/admin/pessoas/editar/{codigo}(codigo=${pessoa.codigo})}"
-                       hx-get="@{/admin/pessoas/editar/{codigo}(codigo=${pessoa.codigo})}"
-                       hx-target="#lista-pessoas-container"
-                       hx-swap="outerHTML"
+                       th:attr="hx-get='/admin/pessoas/editar/' + ${pessoa.codigo}"
+                       hx-target="#main-content" hx-swap="innerHTML"
                        hx-push-url="true"
                        class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
                     <button th:hx-post="@{/admin/pessoas/deletar/{codigo}(codigo=${pessoa.codigo})}"
@@ -69,6 +67,5 @@
 </main>
 
 <script src="/js/delete_events.js" th:src="@{/js/delete_events.js}" defer></script>
-
 </body>
 </html>

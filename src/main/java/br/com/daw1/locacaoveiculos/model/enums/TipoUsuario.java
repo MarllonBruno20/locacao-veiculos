@@ -1,20 +1,16 @@
 package br.com.daw1.locacaoveiculos.model.enums;
 
 public enum TipoUsuario {
+    ADMINISTRADOR("Administrador"),
+    CLIENTE("Cliente");
 
-    CLIENTE, // Usuário do tipo cliente 
-    ADMINISTRADOR // Usuário do tipo Administrador 
-    
-    //CLIENTE("Cliente"),
-    //ADMINISTRADOR("Administrador");
+    private final String displayValue;
 
-    //private String descricao;
+    TipoUsuario(String displayValue) {
+        this.displayValue = displayValue;
+    }
 
-    //private TipoUsuario(String descricao) {
-    //    this.descricao = descricao;
-    //}
-
-    //public String getDescricao() {
-    //   return descricao;
-    //}
+    public String getDisplayValue() {
+        return displayValue;
+    }
 }

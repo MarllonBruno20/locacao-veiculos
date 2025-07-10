@@ -8,14 +8,15 @@
         <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">
             Gerenciamento de Usuários
         </h1>
-        <a th:href="@{/admin/usuarios/novo}"
-           hx-get="@{/admin/usuarios/novo}"
-           hx-target="#lista-usuarios-container"
-           hx-swap="outerHTML"
-           hx-push-url="true"
-           class="px-5 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transform hover:-translate-y-0.5 transition-all duration-300">
-            Adicionar Novo Usuário
-        </a>
+        <button type="button"
+            th:attr="hx-get='/admin/usuarios/novo'"
+            hx-target="#lista-usuarios-container"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+            Criar Novo Usuário
+        </button>
+
     </div>
 
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -47,11 +48,11 @@
                 <td class="px-6 py-4 whitespace-nowrap" th:text="${usuario.tipo}"></td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <a th:href="@{/admin/usuarios/editar/{codigo}(codigo=${usuario.codigo})}"
-                       hx-get="@{/admin/usuarios/editar/{codigo}(codigo=${usuario.codigo})}"
-                       hx-target="#lista-usuarios-container"
-                       hx-swap="outerHTML"
-                       hx-push-url="true"
-                       class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
+                            th:attr="hx-get='/admin/usuarios/editar/' + ${usuario.codigo}"
+                            hx-target="#lista-usuarios-container"
+                            hx-swap="outerHTML"
+                            hx-push-url="true"
+                            class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
                     <button th:hx-post="@{/admin/usuarios/deletar/{codigo}(codigo=${usuario.codigo})}"
                             hx-confirm="Tem certeza que deseja deletar este usuário?"
                             hx-target="#lista-usuarios-container"

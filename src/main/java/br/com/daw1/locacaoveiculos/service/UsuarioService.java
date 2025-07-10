@@ -1,4 +1,3 @@
-// src/main/java/br/com/daw1/locacaoveiculos/service/UsuarioService.java
 package br.com.daw1.locacaoveiculos.service;
 
 import br.com.daw1.locacaoveiculos.exception.RegraNegocioException;
@@ -6,7 +5,7 @@ import br.com.daw1.locacaoveiculos.model.Usuario;
 import br.com.daw1.locacaoveiculos.model.enums.TipoUsuario;
 import br.com.daw1.locacaoveiculos.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // import adicionado
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,7 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder; // Encoder injetado
+    private BCryptPasswordEncoder passwordEncoder;
 
     public Usuario salvar(Usuario usuario) {
         // Verifica se já existe um usuário com o mesmo nome
@@ -30,10 +29,18 @@ public class UsuarioService {
             throw new RegraNegocioException("Nome de usuário já existe.");
         }
 
-        // Criptografa a senha se for novo usuário ou senha nova
-        if (usuario.getCodigo() == null || !usuario.getSenha().equals(usuarioExistente.map(Usuario::getSenha).orElse(""))) {
+        // Lógica para tratamento da senha durante a criação ou edição
+        if (usuario.getCodigo() == null || (usuario.getSenha() != null && !usuario.getSenha().isEmpty())) {
+            // Se for um novo usuário OU se uma nova senha foi fornecida (não nula e não vazia)
             usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        } else if (usuario.getCodigo() != null && (usuario.getSenha() == null || usuario.getSenha().isEmpty())) {
+            // Se for uma edição de usuário existente E a senha fornecida estiver vazia/nula,
+            // significa que o usuário não quer alterar a senha.
+            // Neste caso, recuperamos a senha existente do banco de dados e a mantemos.
+            usuarioExistente.ifPresent(existingUser -> usuario.setSenha(existingUser.getSenha()));
         }
+        // Se a senha for nula e for um novo usuário, o @NotBlank no modelo vai pegar.
+        // Se a senha for nula e for um usuário existente e não encontrada no optional, será tratado no controller ou na tela.
 
         return usuarioRepository.save(usuario);
     }
