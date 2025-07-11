@@ -98,6 +98,18 @@
                             </button>
 
                             <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border z-50">
+                                <div class="py-2">
+                                    <div class="px-4 py-3 border-b">
+                                        <p class="text-sm font-semibold text-gray-800" sec:authentication="principal.username"></p>
+                                        <p class="text-xs text-gray-500" sec:authentication="principal.pessoa.email"></p>
+                                    </div>
+                                    <a th:href="@{/perfil}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                        <i class="fas fa-user mr-3 text-gray-400 w-5"></i> Meu Perfil
+                                    </a>
+                                    <a th:href="@{/locacao/minhas-locacoes}" sec:authorize="hasRole('CLIENTE')" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                        <i class="fas fa-calendar-alt mr-3 text-gray-400 w-5"></i> Minhas Locações
+                                    </a>
+                                </div>
                                 <div class="border-t border-gray-100">
                                     <form th:action="@{/logout}" method="post" class="w-full">
 

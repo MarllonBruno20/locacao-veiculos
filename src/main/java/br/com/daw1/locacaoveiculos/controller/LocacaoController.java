@@ -220,7 +220,7 @@ public class LocacaoController {
     }
 
     @GetMapping("/minhas-locacoes")
-    public String mostrarMinhasLocacoes(@AuthenticationPrincipal Usuario usuarioLogado, Model model) {
+    public String mostrarMinhasLocacoesPaginaCompleta(@AuthenticationPrincipal Usuario usuarioLogado, Model model) {
 
         // 1. O Spring Security injeta o usuário logado diretamente com @AuthenticationPrincipal
         //    (requer configuração no seu UserDetailsService).

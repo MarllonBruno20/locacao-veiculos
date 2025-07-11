@@ -93,7 +93,7 @@ public class AdminVeiculoController {
         model.addAttribute("titulo", "Nossa Frota de Veículos");
 
         // 4. Retorna o caminho para o arquivo HTML
-        return "admin/lista_veiculos :: cardVeiculos";
+        return "admin/lista_veiculos";
     }
 
     @HxRequest

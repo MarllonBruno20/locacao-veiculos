@@ -42,9 +42,9 @@
         <p class="text-center text-sm text-gray-600">
             Não tem uma conta?
             <a th:href="@{/cadastro}"
-               hx-get="@{/cadastro}"
-               hx-target="#login-form-container"
-               hx-swap="outerHTML"
+               th:hx-get="@{/cadastro}"
+               hx-target="#main-content"
+               hx-swap="innerHTML"
                hx-push-url="true"
                class="font-medium text-blue-600 hover:text-blue-500">Cadastre-se</a>
         </p>

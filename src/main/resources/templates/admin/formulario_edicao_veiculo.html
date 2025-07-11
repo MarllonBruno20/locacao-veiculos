@@ -20,6 +20,8 @@
               th:hx-post="@{/admin/veiculos/salvar}"
               hx-indicator="#spinner">
 
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
             <input type="hidden" th:field="*{codigo}" />
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
