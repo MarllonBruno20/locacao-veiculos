@@ -142,7 +142,7 @@ public class LocacaoService {
                 .collect(Collectors.groupingBy(Locacao::getVeiculo));
 
         // PASSO 2: Busca TODOS os veículos. Este é nosso novo ponto de partida.
-        List<Veiculo> todosVeiculos = veiculoRepository.findAll(Sort.by("marca", "modelo"));
+        List<Veiculo> todosVeiculos = veiculoRepository.findAll(Sort.by(Sort.Direction.ASC, "codigo"));
 
         // PASSO 3: Itera sobre a lista completa de veículos para montar o DTO.
         return todosVeiculos.stream()
