@@ -81,6 +81,7 @@ public class AdminVeiculoController {
         return "";
     }
 
+    @HxRequest
     @GetMapping("/veiculos-disponiveis")
     public String listarVeiculosDisponiveis(Model model) {
         // 1. Chama o service para buscar a lista de veículos disponíveis
@@ -93,7 +94,7 @@ public class AdminVeiculoController {
         model.addAttribute("titulo", "Nossa Frota de Veículos");
 
         // 4. Retorna o caminho para o arquivo HTML
-        return "admin/lista_veiculos";
+        return "admin/lista_veiculos :: cardVeiculos";
     }
 
     @HxRequest

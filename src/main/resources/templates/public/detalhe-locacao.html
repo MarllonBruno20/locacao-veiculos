@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layoutpadrao}">
+<head>
+  <title th:text="${titulo}">Detalhes da Locação</title>
+</head>
+<body>
+<main layout:fragment="conteudo" class="py-10">
+
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-6">
+      <a th:href="@{/locacao/minhas-locacoes}" class="text-blue-600 hover:underline flex items-center">
+        <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+        Voltar para Minhas Locações
+      </a>
+    </div>
+
+    <div th:object="${locacao}" class="bg-white rounded-lg shadow-lg overflow-hidden">
+
+      <div class="p-6 bg-gray-50 border-b flex justify-between items-center">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800" th:text="|Reserva #${locacao.codigo}|"></h1>
+          <p class="text-sm text-gray-500">Solicitada em <span th:text="${#temporals.format(locacao.dataLocacaoInicio, 'dd/MM/yyyy')}"></span></p>
+        </div>
+        <div>
+                    <span th:text="*{statusLocacao}"
+                          th:classappend="*{statusLocacao.name() == 'PENDENTE'} ? 'bg-yellow-100 text-yellow-800' :
+                                         (*{statusLocacao.name() == 'ATIVA'} ? 'bg-blue-100 text-blue-800' :
+                                         (*{statusLocacao.name() == 'FINALIZADA'} ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'))"
+                          class="text-sm font-bold px-3 py-1 rounded-full">
+                    </span>
+        </div>
+      </div>
+
+      <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="font-semibold text-lg text-gray-800 mb-3">Seu Veículo</h3>
+          <img th:src="*{veiculo.imageUrl}" class="rounded-lg mb-3 w-full object-cover">
+          <p class="text-xl font-bold" th:text="|*{veiculo.marca} *{veiculo.modelo}|"></p>
+          <p class="text-gray-600" th:text="|Placa: *{veiculo.placa}|"></p>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-lg text-gray-800 mb-3">Detalhes da Reserva</h3>
+          <dl class="space-y-3">
+            <div class="flex justify-between">
+              <dt class="text-gray-500">Retirada</dt>
+              <dd class="font-semibold text-gray-900" th:text="|${#temporals.format(locacao.dataLocacaoInicio, 'dd/MM/yyyy, HH:mm')}h em *{localRetirada}|"></dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-gray-500">Devolução</dt>
+              <dd class="font-semibold text-gray-900" th:text="|${#temporals.format(locacao.dataLocacaoFim, 'dd/MM/yyyy, HH:mm')}h em *{localDevolucao}|"></dd>
+            </div>
+            <div class="flex justify-between border-t pt-3">
+              <dt class="text-gray-500">Pagamento</dt>
+              <dd class="font-semibold text-gray-900" th:text="*{pagamento.formaPagamento}"></dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-gray-500">Status do Pagamento</dt>
+              <dd class="font-semibold" th:text="*{pagamento.statusPagamento}"></dd>
+            </div>
+            <div class="flex justify-between text-xl border-t pt-3">
+              <dt class="font-bold text-gray-900">Valor Total</dt>
+              <dd class="font-bold text-green-600" th:text="${#numbers.formatCurrency(locacao.valorTotal)}"></dd>
+            </div>
+          </dl>
+
+          <div class="mt-8" th:if="${locacao.statusLocacao.name() == 'AGUARDANDO_PAGAMENTO'}">
+            <a th:href="@{/pagamento/{id}(id=${locacao.pagamento.codigo})}"
+               class="block w-full text-center py-3 text-lg bg-green-600 text-white font-bold rounded-lg shadow-lg hover:bg-green-700 transition-all">
+              <i class="fas fa-credit-card"></i> Pagar Agora
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

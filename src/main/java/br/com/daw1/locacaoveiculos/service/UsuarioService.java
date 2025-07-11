@@ -3,6 +3,7 @@ package br.com.daw1.locacaoveiculos.service;
 import br.com.daw1.locacaoveiculos.exception.RegraNegocioException;
 import br.com.daw1.locacaoveiculos.model.Usuario;
 import br.com.daw1.locacaoveiculos.model.enums.TipoUsuario;
+import br.com.daw1.locacaoveiculos.repository.PessoaRepository;
 import br.com.daw1.locacaoveiculos.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +19,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PessoaRepository pessoaRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -73,4 +77,28 @@ public class UsuarioService {
         }
         return salvar(usuario);
     }
+
+    @Transactional
+    public Usuario registrarNovoCliente(Usuario usuario) {
+        // Validação de regras de negócio, como CPF ou nome de usuário duplicado
+        if (usuarioRepository.findByNomeUsuario(usuario.getNomeUsuario()).isPresent()) {
+            throw new RegraNegocioException("Este nome de usuário já está em uso.");
+        }
+        if (pessoaRepository.findByCpf(usuario.getPessoa().getCpf()).isPresent()) {
+            throw new RegraNegocioException("Este CPF já está cadastrado.");
+        }
+
+        // 1. FORÇA O PAPEL DO USUÁRIO - PONTO DE SEGURANÇA CRÍTICO
+        usuario.setTipo(TipoUsuario.CLIENTE);
+
+        // 2. CRIPTOGRAFA A SENHA ANTES DE SALVAR
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+
+        // 3. SALVA A PESSOA E O USUÁRIO
+        // Se a relação Usuario -> Pessoa tiver CascadeType.ALL ou PERSIST,
+        // basta salvar o usuário que a pessoa será salva junto.
+        pessoaRepository.save(usuario.getPessoa());
+        return usuarioRepository.save(usuario);
+    }
+
 }

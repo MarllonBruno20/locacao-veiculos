@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layoutpadrao}">
+<head>
+  <title th:text="${titulo}">Gerenciar Locação</title>
+</head>
+<body>
+<main layout:fragment="conteudo">
+
+  <div class="max-w-7xl mx-auto space-y-8">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800" th:text="${titulo}"></h1>
+        <p class="text-gray-500">Altere os status e gerencie esta locação.</p>
+      </div>
+      <a th:href="@{/admin/locacoes}" class="bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+        &larr; Voltar para a Lista
+      </a>
+    </div>
+
+    <form th:object="${locacao}"
+          method="post"
+          th:action="@{/admin/locacao/atualizar-status}"
+          th:hx-post="@{/admin/locacao/atualizar-status}"
+          hx-target="body" hx-swap="outerHTML"
+          hx-indicator=".htmx-indicator">
+          class="bg-white rounded-lg shadow-md overflow-hidden">
+
+      <input type="hidden" th:field="*{codigo}"/>
+
+      <div class="p-6 border-b grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="font-semibold text-gray-800">Cliente</h3>
+          <p class="text-gray-600" th:text="*{usuario.pessoa.nome}"></p>
+          <p class="text-sm text-gray-500" th:text="*{usuario.pessoa.cpf}"></p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-gray-800">Veículo</h3>
+          <p class="text-gray-600" th:text="|*{veiculo.marca} *{veiculo.modelo}|"></p>
+          <p class="text-sm text-gray-500" th:text="|Placa: *{veiculo.placa}|"></p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-gray-800">Período da Locação</h3>
+          <p class="text-gray-600">
+            <span th:text="${#temporals.format(locacao.dataLocacaoInicio, 'dd/MM/yyyy HH:mm')}"></span>
+            <span class="font-bold">até</span>
+            <span th:text="${#temporals.format(locacao.dataLocacaoFim, 'dd/MM/yyyy HH:mm')}"></span>
+          </p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-gray-800">Valor Total</h3>
+          <p class="text-lg font-bold text-green-600" th:text="${#numbers.formatCurrency(locacao.valorTotal)}"></p>
+        </div>
+      </div>
+
+      <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="statusLocacao" class="block text-sm font-medium text-gray-700">Status da Locação</label>
+          <select id="statusLocacao" th:field="*{statusLocacao}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <option th:each="status : ${todosStatusLocacao}"
+                    th:value="${status}"
+                    th:text="${status}"></option>
+          </select>
+        </div>
+        <div>
+          <label for="statusPagamento" class="block text-sm font-medium text-gray-700">Status do Pagamento</label>
+          <select id="statusPagamento" th:field="*{pagamento.statusPagamento}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <option th:each="status : ${todosStatusPagamento}"
+                    th:value="${status}"
+                    th:text="${status}"></option>
+          </select>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 px-6 py-4 text-right">
+        <span class="htmx-indicator">Salvando...</span>
+        <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg shadow-md hover:bg-indigo-700 transition-colors">
+          Salvar Alterações
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+</body>
+</html>

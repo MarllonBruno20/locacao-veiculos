@@ -1,5 +1,6 @@
 package br.com.daw1.locacaoveiculos.model;
 
+import br.com.daw1.locacaoveiculos.model.enums.LocaisRetiradaDevolucao;
 import br.com.daw1.locacaoveiculos.model.enums.StatusLocacao;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class Locacao implements Serializable {
     @Id
     @SequenceGenerator(name="gerador_locacao", sequenceName="locacao_codigo_seq", allocationSize=1)
     @GeneratedValue(generator="gerador_locacao", strategy=GenerationType.SEQUENCE)
-    private long codigo;
+    private Long codigo;
 
     @Column(name = "data_locacao_inicio")
     private LocalDateTime dataLocacaoInicio;
@@ -29,7 +30,7 @@ public class Locacao implements Serializable {
     @Column(name = "valor_total")
     private BigDecimal valorTotal;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codigo_veiculo")
     private Veiculo veiculo;
 
@@ -37,12 +38,20 @@ public class Locacao implements Serializable {
     @JoinColumn(name = "codigo_usuario")
     private Usuario usuario;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "codigo_pagamento")
     private Pagamento pagamento;
 
     @Column(name = "status_locacao")
     @Enumerated(EnumType.STRING)
     private StatusLocacao statusLocacao;
+
+    @Column(name = "local_retirada")
+    @Enumerated(EnumType.STRING)
+    private LocaisRetiradaDevolucao localRetirada;
+
+    @Column(name = "local_devolucao")
+    @Enumerated(EnumType.STRING)
+    private LocaisRetiradaDevolucao localDevolucao;
 
 }

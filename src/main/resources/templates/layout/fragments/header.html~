@@ -56,7 +56,7 @@
 
                     </div>
 
-                    <div sec:authorize="hasRole('CLIENTE')" class="flex items-center space-x-6">
+                    <div sec:authorize="hasRole('ADMINISTRADOR')" class="flex items-center space-x-6">
                         <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
                            th:href="@{/locacao/minhas-locacoes}" th:hx-get="@{/locacao/minhas-locacoes}" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" hx-on::after-swap="window.scrollTo(0, 0)">
                             Minhas Locações

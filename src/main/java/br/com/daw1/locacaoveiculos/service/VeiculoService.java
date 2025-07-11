@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,5 +72,29 @@ public class VeiculoService {
 
         return veiculoRepository.save(veiculo);
     }
+
+    public List<Veiculo> listarVeiculosDisponiveisParaPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) {
+
+        // --- GUARDIÃO DAS REGRAS DE NEGÓCIO ---
+
+        // 1. Validação de nulidade
+        if (dataInicio == null || dataFim == null) {
+            throw new RegraNegocioException("As datas de início e fim da locação são obrigatórias.");
+        }
+
+        // 2. Validação de ordem cronológica
+        if (dataInicio.isAfter(dataFim) || dataInicio.isEqual(dataFim)) {
+            throw new RegraNegocioException("A data de devolução deve ser posterior à data de retirada.");
+        }
+
+        // 3. Validação de datas no passado
+        if (dataInicio.isBefore(LocalDateTime.now())) {
+            throw new RegraNegocioException("A data de retirada não pode ser no passado.");
+        }
+
+        // Se todas as validações passaram, chama o repositório para fazer a busca no banco.
+        return veiculoRepository.findVeiculosDisponiveisNoPeriodo(dataInicio, dataFim);
+    }
+
 
 }

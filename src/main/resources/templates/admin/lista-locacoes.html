@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layoutpadrao}">
+<head>
+  <title th:text="${titulo}">Gerenciamento de Locações</title>
+</head>
+<body>
+<main layout:fragment="conteudo">
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Gerenciamento de Locações</h1>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left text-gray-600">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+        <tr>
+          <th scope="col" class="px-6 py-3">ID</th>
+          <th scope="col" class="px-6 py-3">Cliente</th>
+          <th scope="col" class="px-6 py-3">Veículo</th>
+          <th scope="col" class="px-6 py-3">Período</th>
+          <th scope="col" class="px-6 py-3">Status Locação</th>
+          <th scope="col" class="px-6 py-3">Status Pagamento</th>
+          <th scope="col" class="px-6 py-3 text-center">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="locacao : ${locacoes}" class="bg-white border-b hover:bg-gray-50">
+          <th scope="row" class="px-6 py-4 font-bold text-gray-900" th:text="${locacao.codigo}">123</th>
+          <td class="px-6 py-4" th:text="${locacao.usuario.pessoa.nome}">Nome do Cliente</td>
+          <td class="px-6 py-4" th:text="|${locacao.veiculo.marca} ${locacao.veiculo.modelo}|">Veículo</td>
+          <td class="px-6 py-4" th:text="|${#temporals.format(locacao.dataLocacaoInicio, 'dd/MM/yy')} - ${#temporals.format(locacao.dataLocacaoFim, 'dd/MM/yy')}|">Datas</td>
+
+          <td class="px-6 py-4" th:switch="${locacao.statusLocacao.name()}">
+            <span th:case="'PENDENTE'" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800">PENDENTE</span>
+            <span th:case="'ATIVA'" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">ATIVA</span>
+            <span th:case="'FINALIZADA'" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-green-100 text-green-800">FINALIZADA</span>
+            <span th:case="'CANCELADA'" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-red-100 text-red-800">CANCELADA</span>
+            <span th:case="*" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800" th:text="${locacao.statusLocacao}"></span>
+          </td>
+
+          <td class="px-6 py-4" th:switch="${locacao.pagamento.statusPagamento.name()}">
+            <span th:case="'PENDENTE'" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800">PENDENTE</span>
+            <span th:case="'PAGO'" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-green-100 text-green-800">PAGO</span>
+            <span th:case="'CANCELADO'" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-red-100 text-red-800">CANCELADO</span>
+            <span th:case="*" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800" th:text="${locacao.pagamento.statusPagamento}"></span>
+          </td>
+
+          <td class="px-6 py-4 text-center">
+            <a th:href="@{/admin/locacao/gerenciar/{id}(id=${locacao.codigo})}"
+               class="font-medium text-indigo-600 hover:text-indigo-800 hover:underline">
+              Gerenciar
+            </a>
+          </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(locacoes)}">
+          <td colspan="7" class="px-6 py-12 text-center text-gray-500">Nenhuma locação encontrada.</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+</body>
+</html>

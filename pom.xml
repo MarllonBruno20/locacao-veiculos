@@ -118,6 +118,11 @@
 			<version>7.0.3</version> <!-- Ou a versão mais recente compatível -->
 		</dependency>
 
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
