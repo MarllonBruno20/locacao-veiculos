@@ -1,5 +1,7 @@
 package br.com.daw1.locacaoveiculos.service;
 
+import br.com.daw1.locacaoveiculos.dto.LocacaoRelatorioDTO;
+import br.com.daw1.locacaoveiculos.dto.VeiculoRelatorioDTO;
 import br.com.daw1.locacaoveiculos.exception.RegraNegocioException;
 import br.com.daw1.locacaoveiculos.model.*;
 import br.com.daw1.locacaoveiculos.model.enums.StatusLocacao;
@@ -13,10 +15,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LocacaoService {
@@ -127,4 +133,69 @@ public class LocacaoService {
         return locacaoRepository.findByIdAndUsuarioIdComRelacionamentos(locacaoId, usuario.getCodigo());
     }
 
+    @Transactional(readOnly = true)
+    public List<VeiculoRelatorioDTO> prepararDadosRelatorioFrota() {
+
+        // PASSO 1: Busca todas as locações e as agrupa em um mapa para acesso rápido.
+        List<Locacao> todasLocacoes = locacaoRepository.findAllComRelacionamentos();
+        Map<Veiculo, List<Locacao>> locacoesPorVeiculoMap = todasLocacoes.stream()
+                .collect(Collectors.groupingBy(Locacao::getVeiculo));
+
+        // PASSO 2: Busca TODOS os veículos. Este é nosso novo ponto de partida.
+        List<Veiculo> todosVeiculos = veiculoRepository.findAll(Sort.by("marca", "modelo"));
+
+        // PASSO 3: Itera sobre a lista completa de veículos para montar o DTO.
+        return todosVeiculos.stream()
+                .map(veiculo -> {
+
+                    // Pega a lista de locações do mapa. Se não existir, usa uma lista vazia.
+                    List<Locacao> locacoesDoVeiculo = locacoesPorVeiculoMap.getOrDefault(veiculo, Collections.emptyList());
+
+                    // A partir daqui, a lógica de cálculo continua a mesma...
+                    long totalDiasAlugadoLong = locacoesDoVeiculo.stream()
+                            .mapToLong(loc -> {
+                                long dias = ChronoUnit.DAYS.between(loc.getDataLocacaoInicio(), loc.getDataLocacaoFim());
+                                return dias == 0 ? 1 : dias;
+                            })
+                            .sum();
+
+                    BigDecimal faturamentoTotal = locacoesDoVeiculo.stream()
+                            .map(Locacao::getValorTotal)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                    // Mapeia os dados detalhados para o sub-relatório
+                    List<LocacaoRelatorioDTO> subReportData = locacoesDoVeiculo.stream()
+                            .map(loc -> {
+                                LocacaoRelatorioDTO locDTO = new LocacaoRelatorioDTO();
+                                locDTO.setCodigo(loc.getCodigo());
+                                locDTO.setNomeCliente(loc.getUsuario().getPessoa().getNome());
+                                locDTO.setDataInicio(loc.getDataLocacaoInicio());
+                                locDTO.setDataFim(loc.getDataLocacaoFim());
+                                locDTO.setValorPago(loc.getValorTotal());
+                                locDTO.setFormaPagamento(loc.getPagamento().getFormaPagamento().getNomeFormatado());
+                                locDTO.setStatusLocacao(loc.getStatusLocacao().name());
+                                return locDTO;
+                            }).collect(Collectors.toList());
+
+                    // Cria o DTO principal para o veículo
+                    VeiculoRelatorioDTO veiculoDTO = new VeiculoRelatorioDTO();
+                    veiculoDTO.setVeiculoId(veiculo.getCodigo());
+                    veiculoDTO.setMarca(veiculo.getMarca());
+                    veiculoDTO.setModelo(veiculo.getModelo());
+                    veiculoDTO.setPlaca(veiculo.getPlaca());
+                    veiculoDTO.setCategoria(veiculo.getCategoria().name());
+                    veiculoDTO.setStatus(veiculo.getStatus().name());
+                    veiculoDTO.setValorDiaria(veiculo.getValorDiaria());
+
+                    // Preenche os campos agregados (agora serão 0 para carros sem locação)
+                    veiculoDTO.setTotalLocacoes((long) locacoesDoVeiculo.size());
+                    veiculoDTO.setFaturamentoTotal(faturamentoTotal);
+                    veiculoDTO.setTotalDiasAlugado(new BigDecimal(totalDiasAlugadoLong));
+
+                    // Anexa a lista de locações (pode ser vazia) para o sub-relatório
+                    veiculoDTO.setLocacoes(subReportData);
+
+                    return veiculoDTO;
+                }).collect(Collectors.toList());
+    }
 }

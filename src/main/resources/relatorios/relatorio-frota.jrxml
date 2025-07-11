@@ -1,0 +1,173 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="relatorio-frota" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="87744957-f933-4403-99bd-292838057fc4">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Projeto DAW I"/>
+	<parameter name="PARAM_SUB_REPORT" class="java.lang.String"/>
+	<query language="SQL"><![CDATA[SELECT
+    v.codigo AS veiculo_id,
+    v.marca,
+    v.modelo,
+    v.placa,
+    v.categoria,
+    v.status,
+    COUNT(l.codigo) AS total_locacoes,
+    COALESCE(SUM(l.valor_total), 0) AS faturamento_total,
+    COALESCE(SUM(EXTRACT(DAY FROM (l.data_locacao_fim - l.data_locacao_inicio))), 0) AS total_dias_alugado,
+    v.valor_diaria
+FROM
+    veiculo v
+LEFT JOIN 
+    locacao l ON v.codigo = l.codigo_veiculo
+GROUP BY
+    v.codigo, v.marca, v.modelo, v.placa, v.categoria, v.status, v.valor_diaria
+ORDER BY
+    faturamento_total DESC;]]></query>
+	<field name="veiculo_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="veiculo_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="veiculo_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="veiculo"/>
+	</field>
+	<field name="marca" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marca"/>
+		<property name="com.jaspersoft.studio.field.label" value="marca"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="veiculo"/>
+	</field>
+	<field name="modelo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="modelo"/>
+		<property name="com.jaspersoft.studio.field.label" value="modelo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="veiculo"/>
+	</field>
+	<field name="placa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="placa"/>
+		<property name="com.jaspersoft.studio.field.label" value="placa"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="veiculo"/>
+	</field>
+	<field name="categoria" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="categoria"/>
+		<property name="com.jaspersoft.studio.field.label" value="categoria"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="veiculo"/>
+	</field>
+	<field name="status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="status"/>
+		<property name="com.jaspersoft.studio.field.label" value="status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="veiculo"/>
+	</field>
+	<field name="total_locacoes" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_locacoes"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_locacoes"/>
+	</field>
+	<field name="faturamento_total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="faturamento_total"/>
+		<property name="com.jaspersoft.studio.field.label" value="faturamento_total"/>
+	</field>
+	<field name="total_dias_alugado" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_dias_alugado"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_dias_alugado"/>
+	</field>
+	<field name="valor_diaria" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="valor_diaria"/>
+		<property name="com.jaspersoft.studio.field.label" value="valor_diaria"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="veiculo"/>
+	</field>
+	<field name="locacoes" class="java.util.List"/>
+	<group name="grupo_locacao">
+		<expression><![CDATA[$F{veiculo_id}]]></expression>
+		<groupHeader>
+			<band height="50">
+				<element kind="textField" uuid="c80c5500-c7fa-492f-87eb-5b9db1a8e302" x="0" y="10" width="40" height="30" hTextAlign="Center">
+					<expression><![CDATA[$F{veiculo_id}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="907121ac-c646-4ebf-a206-287c30d97930"/>
+				</element>
+				<element kind="textField" uuid="1c92a5d1-4c9f-41cc-981c-668dfe23a8d2" x="50" y="10" width="50" height="30" hTextAlign="Center">
+					<expression><![CDATA[$F{marca}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0699252c-774d-47e5-9b14-d64018d825eb"/>
+				</element>
+				<element kind="textField" uuid="d47b6182-356b-4225-8bea-edf557e4657a" x="110" y="10" width="60" height="30" hTextAlign="Center">
+					<expression><![CDATA[$F{modelo}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d160256d-c4fc-45ee-a6f0-7bcfc8ad0aa3"/>
+				</element>
+				<element kind="textField" uuid="53e1b649-6191-4b2d-bbf1-b26a5b8ace1d" x="180" y="10" width="50" height="30" hTextAlign="Center">
+					<expression><![CDATA[$F{placa}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9761b093-d23f-403d-8bb0-3031d05a44ba"/>
+				</element>
+				<element kind="textField" uuid="247e7db3-8d15-4c80-9763-ac989a31a7c8" x="230" y="10" width="72" height="30" hTextAlign="Center">
+					<expression><![CDATA[$F{categoria}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7a8ac2e6-32ee-42da-a8e6-7f521c7ec630"/>
+				</element>
+				<element kind="textField" uuid="f3038447-4905-42f7-81f0-cbbc612e22d2" x="300" y="10" width="50" height="30" hTextAlign="Center">
+					<expression><![CDATA[$F{status}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="30c49c1d-dbc7-4614-897d-271eb3ed96da"/>
+				</element>
+				<element kind="textField" uuid="5dec43ac-d85e-4ed2-a557-b48b80acd403" x="340" y="10" width="70" height="30" hTextAlign="Center">
+					<expression><![CDATA[$F{total_locacoes}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="11d501ac-ecf2-4338-91f9-3d4a39f2107b"/>
+				</element>
+				<element kind="textField" uuid="8ee70cb2-4036-48c8-9737-3b6470e09c2e" x="410" y="10" width="70" height="20" hTextAlign="Center">
+					<expression><![CDATA[$F{faturamento_total}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9833b060-45bc-4530-90ac-4e6fb677acf4"/>
+				</element>
+				<element kind="textField" uuid="f5a0c446-b0e7-4e2e-8e8f-54da827aa74f" x="492" y="10" width="64" height="30" hTextAlign="Center">
+					<expression><![CDATA[$F{total_dias_alugado}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d49c0626-4340-4848-817a-1cdab77b1d3b"/>
+				</element>
+				<element kind="line" uuid="4cbe4e98-6d5d-4d9e-ad93-3f1103f4cc28" x="-1" y="40" width="555" height="1"/>
+			</band>
+		</groupHeader>
+	</group>
+	<background splitType="Stretch"/>
+	<title height="81" splitType="Stretch">
+		<element kind="staticText" uuid="d59f7143-7dd7-4deb-b385-fc04cf1249af" x="0" y="10" width="574" height="40" fontSize="22.0" hTextAlign="Center">
+			<text><![CDATA[Relatório da Frota]]></text>
+		</element>
+		<element kind="line" uuid="26ca48ae-0eed-400f-96c1-0b885bdb0f80" x="0" y="50" width="559" height="1"/>
+		<element kind="line" uuid="b1d67832-6a94-45a3-a564-08ee75be09e8" x="-1" y="0" width="557" height="1"/>
+	</title>
+	<columnHeader height="33" splitType="Stretch">
+		<element kind="rectangle" uuid="bcac6e11-ae3d-40c9-aa59-eecd93f3b8d4" mode="Opaque" x="0" y="-1" width="553" height="31" forecolor="#030303" backcolor="#C4C2C2"/>
+		<element kind="staticText" uuid="f59d56f6-864e-4f88-8311-98e43a1ca992" x="0" y="1" width="40" height="30" hTextAlign="Center" vTextAlign="Top">
+			<text><![CDATA[Código]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="907121ac-c646-4ebf-a206-287c30d97930"/>
+		</element>
+		<element kind="staticText" uuid="fa0630cf-339c-4784-8ee5-4147bbd99749" x="52" y="0" width="48" height="30" hTextAlign="Center">
+			<text><![CDATA[Marca]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0699252c-774d-47e5-9b14-d64018d825eb"/>
+		</element>
+		<element kind="staticText" uuid="ddc20b49-054e-4f6c-86ca-c6a9980868a4" x="110" y="0" width="60" height="30" hTextAlign="Center">
+			<text><![CDATA[Modelo]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d160256d-c4fc-45ee-a6f0-7bcfc8ad0aa3"/>
+		</element>
+		<element kind="staticText" uuid="31c41659-112d-46c0-b752-79853840cadc" x="180" y="0" width="50" height="30" hTextAlign="Center">
+			<text><![CDATA[Placa]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9761b093-d23f-403d-8bb0-3031d05a44ba"/>
+		</element>
+		<element kind="staticText" uuid="d13a404c-a240-4acd-aed7-21216f6c129f" x="240" y="0" width="50" height="30" hTextAlign="Center">
+			<text><![CDATA[Categoria]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7a8ac2e6-32ee-42da-a8e6-7f521c7ec630"/>
+		</element>
+		<element kind="staticText" uuid="93f50223-9f25-427d-9480-936daed42f4f" x="300" y="0" width="40" height="30" hTextAlign="Center">
+			<text><![CDATA[Status]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="30c49c1d-dbc7-4614-897d-271eb3ed96da"/>
+		</element>
+		<element kind="staticText" uuid="b9d1cb1c-e255-4b21-a993-62f2773a8ec7" x="340" y="0" width="70" height="30" hTextAlign="Center">
+			<text><![CDATA[Total locações]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="11d501ac-ecf2-4338-91f9-3d4a39f2107b"/>
+		</element>
+		<element kind="staticText" uuid="21e86f53-6a97-4c42-b474-5b63991672e6" x="415" y="0" width="70" height="30" hTextAlign="Center">
+			<text><![CDATA[Faturamento Total]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9833b060-45bc-4530-90ac-4e6fb677acf4"/>
+		</element>
+		<element kind="staticText" uuid="24a981d9-15cd-47ff-b1ba-396afb8ebf24" x="490" y="0" width="64" height="30" hTextAlign="Center">
+			<text><![CDATA[Dias alugado]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d49c0626-4340-4848-817a-1cdab77b1d3b"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="230" splitType="Stretch">
+			<element kind="line" uuid="b3cb1d76-c0cc-4f6b-aac2-1987460afbeb" x="-2" y="30" width="557" height="1"/>
+			<element kind="subreport" uuid="3fbc4b86-dc16-4746-be24-8518e0e39e2c" x="-1" y="0" width="555" height="19">
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{locacoes})]]></dataSourceExpression>
+				<expression><![CDATA[$P{PARAM_SUB_REPORT} + "subreport_locacao_por_veiculo.jasper"]]></expression>
+			</element>
+		</band>
+	</detail>
+</jasperReport>

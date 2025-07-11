@@ -1,0 +1,59 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="subreport_locacao_por_veiculo" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a6415e10-0d25-40e1-94aa-f1108448fd18">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="codigo" class="java.lang.Long"/>
+	<field name="nomeCliente" class="java.lang.String"/>
+	<field name="dataInicio" class="java.time.LocalDateTime"/>
+	<field name="dataFim" class="java.time.LocalDateTime"/>
+	<field name="valorPago" class="java.math.BigDecimal"/>
+	<field name="formaPagamento" class="java.lang.String"/>
+	<field name="statusLocacao" class="java.lang.String"/>
+	<background splitType="Stretch"/>
+	<detail>
+		<band height="76" splitType="Stretch">
+			<element kind="textField" uuid="becae333-ef8e-4fd3-9a2a-be69e8a55b51" x="0" y="40" width="60" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{codigo}]]></expression>
+			</element>
+			<element kind="staticText" uuid="2bb1b00e-4580-4037-bbdd-d46b6ca2d2ac" x="0" y="0" width="60" height="30" hTextAlign="Center">
+				<text><![CDATA[Código]]></text>
+			</element>
+			<element kind="textField" uuid="83594674-1b59-4aab-ba33-73071878acba" x="70" y="40" width="100" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{nomeCliente}]]></expression>
+			</element>
+			<element kind="staticText" uuid="3a614e7f-79c7-44cc-9b13-19ad181985a8" x="70" y="0" width="100" height="30" hTextAlign="Center">
+				<text><![CDATA[Nome do Cliente]]></text>
+			</element>
+			<element kind="textField" uuid="efc14753-3286-47b0-8a60-7930e7e75c67" x="180" y="40" width="60" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{dataInicio}]]></expression>
+			</element>
+			<element kind="staticText" uuid="91404b65-d8e2-4a44-b76c-f825082a3cdb" x="180" y="0" width="60" height="30" hTextAlign="Center">
+				<text><![CDATA[Data início]]></text>
+			</element>
+			<element kind="textField" uuid="db410b75-82c2-4c35-8ad7-a5ac43687a23" x="250" y="40" width="50" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{dataFim}]]></expression>
+			</element>
+			<element kind="staticText" uuid="2a5d0987-6de7-4231-bed5-93a7191205b1" x="250" y="0" width="50" height="30" hTextAlign="Center">
+				<text><![CDATA[Data fim]]></text>
+			</element>
+			<element kind="textField" uuid="904ed23b-6e1f-4012-bf2f-e7d06354bf72" x="310" y="40" width="60" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{valorPago}]]></expression>
+			</element>
+			<element kind="staticText" uuid="a481842e-5240-4de3-8d66-5213a0fbc174" x="310" y="0" width="60" height="30" hTextAlign="Center">
+				<text><![CDATA[Valor pago]]></text>
+			</element>
+			<element kind="textField" uuid="e31579bf-cf06-4902-8130-5af97fdf46c4" x="380" y="40" width="100" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{formaPagamento}]]></expression>
+			</element>
+			<element kind="staticText" uuid="36f8c863-4f32-4457-bde3-58f5602bcca8" x="380" y="0" width="100" height="30" hTextAlign="Center">
+				<text><![CDATA[Forma de Pagamento]]></text>
+			</element>
+			<element kind="textField" uuid="2781ed99-83c0-42fd-9848-aac9737009f0" x="490" y="40" width="60" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{statusLocacao}]]></expression>
+			</element>
+			<element kind="staticText" uuid="43f96e80-bb29-4ccf-b4a5-7ca0314645e7" x="490" y="0" width="70" height="30" hTextAlign="Center">
+				<text><![CDATA[Status]]></text>
+			</element>
+		</band>
+	</detail>
+</jasperReport>
