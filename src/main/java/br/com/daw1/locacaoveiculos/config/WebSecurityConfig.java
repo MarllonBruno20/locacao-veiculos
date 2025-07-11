@@ -37,7 +37,7 @@ public class WebSecurityConfig {
 
                         // Rotas Públicas:
                         // A página inicial, a listagem pública de veículos, e os arquivos estáticos (CSS, JS) são permitidos para todos.
-                        .requestMatchers("/", "/veiculos/**", "/login", "/css/**", "/js/**", "/imagens/**").permitAll()
+                        .requestMatchers("/", "/veiculos/**", "/login", "/cadastro", "/css/**", "/dist/**", "/js/**", "/images/**").permitAll()
 
                         // Qualquer outra requisição não listada acima exigirá autenticação.
                         .anyRequest().authenticated()
