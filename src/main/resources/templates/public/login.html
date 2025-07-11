@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head th:remove="tag">
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layoutpadrao}">
+<head>
     <title>Login</title>
 </head>
-<body th:remove="tag">
-<main th:fragment="conteudo" class="flex items-center justify-center min-h-screen bg-gray-100">
-    <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
+<body>
+<main layout:fragment="conteudo" class="bg-gray-100 py-8">
+    <div id="login-form-container" class="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg mx-auto">
         <h2 class="text-3xl font-bold text-center text-gray-800">Entrar na Conta</h2>
         <p class="text-center text-gray-600">Bem-vindo de volta! Faça login para continuar.</p>
 
@@ -39,9 +42,9 @@
         <p class="text-center text-sm text-gray-600">
             Não tem uma conta?
             <a th:href="@{/cadastro}"
-               hx-get="@{/admin/usuarios/novo}"
-               hx-target="#main-content"
-               hx-swap="innerHTML"
+               hx-get="@{/cadastro}"
+               hx-target="#login-form-container"
+               hx-swap="outerHTML"
                hx-push-url="true"
                class="font-medium text-blue-600 hover:text-blue-500">Cadastre-se</a>
         </p>
