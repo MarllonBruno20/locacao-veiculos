@@ -1,155 +1,125 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:x-transition="http://www.w3.org/1999/xhtml" xmlns:hx-on="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:hx-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Locadora de Veículos</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="/dist/output.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary': '#3b82f6',
-                        'primary-dark': '#2563eb',
-                        'secondary': '#64748b'
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="bg-gray-50" th:fragment="header">
+
+<body th:fragment="header">
 
 <nav class="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
     <div class="container mx-auto px-6 py-4">
         <div class="flex justify-between items-center">
+
             <div class="flex items-center space-x-3">
-                <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-xl shadow-lg">
+                <a th:href="@{/}" class="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-xl shadow-lg">
                     <i class="fas fa-car text-white text-xl"></i>
-                </div>
-                <a class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent hover:from-blue-700 hover:to-blue-900 transition-all duration-300" href="/">
+                </a>
+                <a class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent hover:from-blue-700 hover:to-blue-900 transition-all duration-300" th:href="@{/}">
                     AutoRent
                 </a>
             </div>
 
             <div class="hidden lg:flex lg:items-center lg:space-x-8">
                 <div class="flex items-center space-x-6">
-                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
-                       href="/">
+                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" th:href="@{/}">
                         Início
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
                     <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
-                       href="/veiculos/veiculos-disponiveis"
-                       th:attr="hx-get=@{/veiculos/veiculos-disponiveis}" hx-target="#main-content"
-                       hx-swap="innerHTML"  hx-push-url="true"
-                       hx-on::after-swap="window.scrollTo(0, 0)"
-                    >
+                       th:href="@{/veiculos}"
+                       th:hx-get="@{/veiculos}" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" hx-on::after-swap="window.scrollTo(0, 0)">
                         Veículos
                         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
-<<<<<<< HEAD
-                    <a th:href="@{/locacao/nova}"
-                       th:hx-get="@{/locacao/nova}"
-                       hx-target="body"
-                       hx-swap="outerHTML"
-                       hx-push-url="true"
-                       class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group">
 
-                        <span>Fazer Reserva</span>
-=======
+                    <div sec:authorize="hasRole('ADMINISTRADOR')" class="flex items-center space-x-6">
+                        <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
+                           th:href="@{/admin/locacao}" th:hx-get="@{/admin/locacao}" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" hx-on::after-swap="window.scrollTo(0, 0)">
+                            Gerenciar Locações
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
+                        <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
+                           th:href="@{/admin/veiculos/veiculos-disponiveis}" th:hx-get="@{/admin/veiculos/veiculos-disponiveis}" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" hx-on::after-swap="window.scrollTo(0, 0)">
+                            Gerenciar Veículos
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
 
-                    <!-- para testar o erro 403-->
-                    <a href="/admin/usuarios"
-                        th:attr="hx-get=@{/admin/usuarios}" hx-target="#main-content"
-                        hx-swap="innerHTML"  hx-push-url="true"
-                        class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                        <i class="fas fa-user-shield mr-3 text-gray-400"></i>
-                        Gerenciar Usuários
-                    </a>
+                        <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
+                           th:href="@{/admin/usuarios/novo}" th:hx-get="@{/admin/usuarios/novo}" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" hx-on::after-swap="window.scrollTo(0, 0)">
+                            Gerenciar Usuários
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
 
-                    <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group" href="#">
-                        Contato
->>>>>>> 44048823552e12010f16518e48fc226c1eab6c54
-                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                    </a>
+                    </div>
+
+                    <div sec:authorize="hasRole('ADMINISTRADOR')" class="flex items-center space-x-6">
+                        <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
+                           th:href="@{/locacao/minhas-locacoes}" th:hx-get="@{/locacao/minhas-locacoes}" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" hx-on::after-swap="window.scrollTo(0, 0)">
+                            Minhas Locações
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
+
+                        <a class="relative text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 group"
+                           th:href="@{/locacao/nova}" th:hx-get="@{/locacao/nova}" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" hx-on::after-swap="window.scrollTo(0, 0)">
+                            Fazer Reserva
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
+
+                    </div>
+
                 </div>
 
-                <div id="auth-section" class="flex items-center">
-                    <div class="flex items-center space-x-3" id="logged-out-view">
-                        <a th:href="@{/auth/login}"
-                           th:attr="hx-get=@{/auth/login}" hx-target="#main-content"
-                           hx-swap="innerHTML"
-                           hx-push-url="true"
-                           hx-on::after-swap="window.scrollTo(0, 0)"
-                           class="px-4 py-2 text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 flex items-center space-x-2">
+                <div class="flex items-center">
+
+                    <div sec:authorize="isAnonymous()" class="flex items-center space-x-3">
+                        <a th:href="@{/login}" class="px-4 py-2 text-gray-700 font-medium hover:text-blue-600 transition-colors duration-300 flex items-center space-x-2">
                             <i class="fas fa-sign-in-alt text-sm"></i>
                             <span>Entrar</span>
                         </a>
-                        <a th:href="@{/admin/usuarios/novo}"
-                           th:attr="hx-get=@{/admin/usuarios/novo}" hx-target="#main-content"
-                           hx-swap="innerHTML"
-                           hx-push-url="true"
-                           hx-on::after-swap="window.scrollTo(0, 0)"
+                        <a th:href="@{/cadastro}" th:hx-get="@{/cadastro}" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" hx-on::after-swap="window.scrollTo(0, 0)"
                            class="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2">
                             <i class="fas fa-user-plus text-sm"></i>
                             <span>Criar Conta</span>
                         </a>
                     </div>
 
-                    <div class="hidden" id="logged-in-view" x-data="{ dropdownOpen: false }">
+                    <div sec:authorize="isAuthenticated()" x-data="{ dropdownOpen: false }">
                         <div class="relative">
                             <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                <div class="relative">
-                                    <img class="h-10 w-10 rounded-full object-cover border-2 border-blue-200 shadow-md" th:src="@{/images/avatar.png}" alt="Avatar do usuário">
-                                    <div class="absolute -bottom-1 -right-1 h-4 w-4 bg-green-400 border-2 border-white rounded-full"></div>
-                                </div>
                                 <div class="hidden md:block text-left">
-                                    <p class="text-sm font-medium text-gray-700">João Silva</p>
-                                    <p class="text-xs text-gray-500">Premium</p>
+                                    <p class="text-sm font-medium text-gray-700" sec:authentication="principal.username"></p>
+                                    <p class="text-xs text-gray-500 capitalize" th:text="${#strings.toLowerCase( #authentication.principal.authorities[0].authority.replace('ROLE_', ''))}"></p>
                                 </div>
                                 <i class="fas fa-chevron-down text-gray-400 text-sm transition-transform duration-300" :class="{ 'rotate-180': dropdownOpen }"></i>
                             </button>
 
-                            <div x-show="dropdownOpen"
-                                 @click.away="dropdownOpen = false"
-                                 x-transition:enter="transition ease-out duration-200"
-                                 x-transition:enter-start="opacity-0 scale-95"
-                                 x-transition:enter-end="opacity-100 scale-100"
-                                 x-transition:leave="transition ease-in duration-150"
-                                 x-transition:leave-start="opacity-100 scale-100"
-                                 x-transition:leave-end="opacity-0 scale-95"
-                                 class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
-
+                            <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border z-50">
                                 <div class="py-2">
-                                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
-                                        <i class="fas fa-user mr-3 text-gray-400"></i>
-                                        Meu Perfil
+                                    <div class="px-4 py-3 border-b">
+                                        <p class="text-sm font-semibold text-gray-800" sec:authentication="principal.username"></p>
+                                        <p class="text-xs text-gray-500" sec:authentication="principal.pessoa.email"></p>
+                                    </div>
+                                    <a th:href="@{/perfil}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                        <i class="fas fa-user mr-3 text-gray-400 w-5"></i> Meu Perfil
                                     </a>
-                                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
-                                        <i class="fas fa-calendar-alt mr-3 text-gray-400"></i>
-                                        Minhas Reservas
-                                    </a>
-                                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
-                                        <i class="fas fa-heart mr-3 text-gray-400"></i>
-                                        Favoritos
-                                    </a>
-                                    <a href="#" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
-                                        <i class="fas fa-cog mr-3 text-gray-400"></i>
-                                        Configurações
+                                    <a th:href="@{/locacao/minhas-locacoes}" sec:authorize="hasRole('CLIENTE')" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                        <i class="fas fa-calendar-alt mr-3 text-gray-400 w-5"></i> Minhas Locações
                                     </a>
                                 </div>
-
                                 <div class="border-t border-gray-100">
-                                    <a href="#" class="flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200">
-                                        <i class="fas fa-sign-out-alt mr-3"></i>
-                                        Sair
-                                    </a>
+                                    <form th:action="@{/logout}" method="post" class="w-full">
+
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                                        <button type="submit" class="w-full text-left flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200 focus:outline-none">
+                                            <i class="fas fa-sign-out-alt mr-3 w-5"></i>
+                                            Sair
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -157,149 +127,12 @@
                 </div>
             </div>
 
-            <div class="lg:hidden flex items-center">
-                <button id="mobile-menu-button" class="p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
-            </div>
+            <div class="lg:hidden flex items-center"> ... </div>
         </div>
 
-        <div id="mobile-menu" class="hidden lg:hidden mt-4 pb-4 border-t border-gray-100">
-            <div class="pt-4 space-y-2">
-                <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-home mr-3 text-gray-400"></i>
-                    Início
-                </a>
-                <a href="/admin/veiculos/novo"
-                   th:attr="hx-get=@{/admin/veiculos/novo}" hx-target="#main-content"
-                   hx-swap="innerHTML"  hx-push-url="true"
-                   class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-car mr-3 text-gray-400"></i>
-                    Cadastrar Veículo
-                </a>
-                <a href="/admin/pessoas"
-                   th:attr="hx-get=@{/admin/pessoas}" hx-target="#main-content"
-                   hx-swap="innerHTML"  hx-push-url="true"
-                   class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-users-cog mr-3 text-gray-400"></i>
-                    Gerenciar Pessoas
-                </a>
-                <a href="/admin/usuarios"
-                   th:attr="hx-get=@{/admin/usuarios}" hx-target="#main-content"
-                   hx-swap="innerHTML"  hx-push-url="true"
-                   class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-user-shield mr-3 text-gray-400"></i>
-                    Gerenciar Usuários
-                </a>
-                <a href="/veiculos/veiculos-disponiveis"
-                   th:attr="hx-get=@{/veiculos/veiculos-disponiveis}" hx-target="#main-content"
-                   hx-swap="innerHTML"  hx-push-url="true"
-                   class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-car mr-3 text-gray-400"></i>
-                    Veículos
-                </a>
-                <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-info-circle mr-3 text-gray-400"></i>
-                    Sobre
-                </a>
-                <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-envelope mr-3 text-gray-400"></i>
-                    Contato
-                </a>
-            </div>
-
-            <div class="border-t border-gray-100 mt-4 pt-4">
-                <div id="mobile-auth-section">
-                    <a th:href="@{/auth/login}"
-                       th:attr="hx-get=@{/auth/login}" hx-target="#main-content"
-                       hx-swap="innerHTML"
-                       hx-push-url="true"
-                       class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                        <i class="fas fa-sign-in-alt mr-3 text-gray-400"></i>
-                        Entrar
-                    </a>
-                    <a th:href="@{/admin/usuarios/novo}"
-                       th:attr="hx-get=@{/admin/usuarios/novo}" hx-target="#main-content"
-                       hx-swap="innerHTML"
-                       hx-push-url="true"
-                       class="flex items-center px-4 py-3 mt-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300">
-                        <i class="fas fa-user-plus mr-3"></i>
-                        Criar Conta
-                    </a>
-                </div>
-            </div>
-        </div>
+        <div id="mobile-menu" class="hidden lg:hidden mt-4"> ... </div>
     </div>
 </nav>
-
-<script>
-    // Auth state management (permanece aqui, no header, pois a visibilidade de login é global ao header)
-    let isLoggedIn = false;
-
-    function toggleAuthState() {
-        isLoggedIn = !isLoggedIn;
-        updateAuthDisplay();
-    }
-
-    function updateAuthDisplay() {
-        const loggedOutView = document.getElementById('logged-out-view');
-        const loggedInView = document.getElementById('logged-in-view');
-        const mobileAuthSection = document.getElementById('mobile-auth-section');
-
-        // Lógica para o estado "logged in"
-        if (isLoggedIn) {
-            if (loggedOutView) { // Verifica se o elemento existe antes de manipular
-                loggedOutView.classList.add('hidden');
-            }
-            if (loggedInView) { // Verifica se o elemento existe antes de manipular
-                loggedInView.classList.remove('hidden');
-            }
-
-            // Update mobile menu for logged in user
-            if (mobileAuthSection) { // Verifica se o elemento existe antes de manipular
-                mobileAuthSection.innerHTML = `
-                    <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                        <i class="fas fa-user mr-3 text-gray-400"></i>
-                        Meu Perfil
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                        <i class="fas fa-calendar-alt mr-3 text-gray-400"></i>
-                        Minhas Reservas
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200">
-                        <i class="fas fa-sign-out-alt mr-3"></i>
-                        Sair
-                    </a>
-                `; // CRASES FECHADAS CORRETAMENTE AQUI
-            }
-        } else { // Lógica para o estado "logged out"
-            if (loggedOutView) { // Verifica se o elemento existe antes de manipular
-                loggedOutView.classList.remove('hidden');
-            }
-            if (loggedInView) { // Verifica se o elemento existe antes de manipular
-                loggedInView.classList.add('hidden');
-            }
-
-            // Reset mobile menu for logged out user
-            if (mobileAuthSection) { // Verifica se o elemento existe antes de manipular
-                mobileAuthSection.innerHTML = `
-                    <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200">
-                        <i class="fas fa-sign-in-alt mr-3 text-gray-400"></i>
-                        Entrar
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 mt-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300">
-                        <i class="fas fa-user-plus mr-3"></i>
-                        Criar Conta
-                    </a>
-                `; // CRASES FECHADAS CORRETAMENTE AQUI
-            }
-        }
-        // Initialize auth display
-        updateAuthDisplay();
-    }
-</script>
 
 </body>
 </html>

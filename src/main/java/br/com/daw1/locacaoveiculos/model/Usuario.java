@@ -1,6 +1,8 @@
 package br.com.daw1.locacaoveiculos.model;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 import br.com.daw1.locacaoveiculos.model.enums.TipoUsuario;
@@ -16,10 +18,13 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "usuario")
-public class Usuario implements Serializable {
+public class Usuario implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -42,8 +47,50 @@ public class Usuario implements Serializable {
     @JoinColumn(name = "codigo_pessoa")
     @Valid
     // O usuário precisa estar referenciado à classe Pessoa
-    private Pessoa pessoa; 
+    private Pessoa pessoa;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Esta é a parte mais importante para a autorização.
+        // O Spring Security precisa de uma lista de "papéis" (roles).
+        // A convenção é usar o prefixo "ROLE_".
+        // Ex: Se o tipo for ADMINISTRADOR, a autoridade será "ROLE_ADMINISTRADOR".
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.tipo.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        // Retorna a senha (ela deve estar criptografada no banco).
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        // Retorna o campo que você usa para login.
+        return this.nomeUsuario;
+    }
+
+    // Para um sistema simples, podemos retornar 'true' para os métodos abaixo.
+    // Eles controlam se a conta está expirada, bloqueada, etc.
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
     public Long getCodigo() {
         return codigo;

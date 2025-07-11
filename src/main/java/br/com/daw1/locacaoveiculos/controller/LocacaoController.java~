@@ -49,15 +49,6 @@ public class LocacaoController {
         response.setHeader("HX-Redirect", "/locacao/wizard");
     }
 
-    @GetMapping("/wizard")
-    public String mostrarPaginaWizard(Model model) {
-        model.addAttribute("titulo", "Nova Locação");
-
-        // Ele só precisa retornar o caminho para o seu template "casca".
-        // O hx-trigger="load" dentro deste template cuidará de carregar a Etapa 1.
-        return "public/locacao-wizard";
-    }
-
     // --- MÉTODO 2: FORNECER O HTML DA ETAPA 1 ---
     // É chamado pelo hx-trigger="load" da página casca.
     @HxRequest

@@ -7,11 +7,7 @@ spring.web.locale=pt_BR
 # Configura��es do BD
 spring.datasource.url=jdbc:postgresql://localhost:5432/locacaoveiculos
 spring.datasource.username=postgres
-<<<<<<< HEAD
 spring.datasource.password=admin
-=======
-spring.datasource.password=jls2003
->>>>>>> 44048823552e12010f16518e48fc226c1eab6c54
 
 spring.jpa.hibernate.ddl-auto=none
 

@@ -3,7 +3,10 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-<head th:fragment="head(title)"> <meta charset="UTF-8" />
+<head th:fragment="head(title)">
+    <meta charset="UTF-8" />
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
     <title th:text="${title}">Locadora de Veículos</title> <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Locadora de Veículos</title>
     <link href="/dist/output.css" rel="stylesheet">

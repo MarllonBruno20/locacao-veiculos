@@ -45,6 +45,7 @@ public class AdminUsuarioController {
     @HxRequest
     @GetMapping("/novo")
     public String mostrarFormularioCadastroUsuario(Model model) {
+        model.addAttribute("isAdminContext", true);
         model.addAttribute("usuario", new Usuario());
         model.addAttribute("pessoa", new Pessoa());
         model.addAttribute("tiposUsuario", TipoUsuario.values());

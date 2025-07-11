@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layoutpadrao}">
+<head>
+    <title>Crie sua Conta</title>
+</head>
+<body>
+
+<main layout:fragment="conteudo" th:fragment="conteudo">
+    <<div th:replace="~{admin/cadastrar_usuario :: formularioUsuario(postActionUrl=@{/cadastro}, isAdminContext=false)}"></div>
+
+
+    <div th:if="${erroCadastro}" class="max-w-xl mx-auto mt-4 text-center p-3 bg-red-100 text-red-700 rounded-lg">
+        <p th:text="${erroCadastro}"></p>
+    </div>
+</main>
+
+</body>
+</html>

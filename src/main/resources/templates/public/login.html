@@ -9,7 +9,7 @@
         <h2 class="text-3xl font-bold text-center text-gray-800">Entrar na Conta</h2>
         <p class="text-center text-gray-600">Bem-vindo de volta! Faça login para continuar.</p>
 
-        <form th:action="@{/auth/login}" method="post" class="space-y-4">
+        <form th:action="@{/login}" method="post" class="space-y-4">
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700">Nome de Usuário</label>
                 <input type="text" id="username" name="username" required
@@ -38,7 +38,7 @@
 
         <p class="text-center text-sm text-gray-600">
             Não tem uma conta?
-            <a th:href="@{/admin/usuarios/novo}"
+            <a th:href="@{/cadastro}"
                hx-get="@{/admin/usuarios/novo}"
                hx-target="#main-content"
                hx-swap="innerHTML"
