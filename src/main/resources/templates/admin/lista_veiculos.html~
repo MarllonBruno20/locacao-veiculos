@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" layout:decorate="~{layout/layoutpadrao}" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:hx-on="http://www.w3.org/1999/xhtml">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <title th:text="${titulo}">Gerenciamento de Frota</title>
 </head>
@@ -13,14 +13,7 @@
             Gerenciamento de Frota
         </h1>
         <a th:href="@{/admin/veiculos/novo}"
-
-           th:hx-get="@{/admin/veiculos/novo}"
-           hx-target="#main-content"
-           hx-swap="innerHTML"
-           hx-push-url="true"
-           hx-on::after-swap="window.scrollTo(0, 0)"
-
-           class="px-5 py-3 bg-indigo-600 text-white font-semibold ...">
+           class="px-5 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transform hover:-translate-y-0.5 transition-all duration-300">
             Adicionar Novo Veículo
         </a>
 

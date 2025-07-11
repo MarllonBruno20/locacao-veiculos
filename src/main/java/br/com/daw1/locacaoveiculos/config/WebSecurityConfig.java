@@ -49,7 +49,7 @@ public class WebSecurityConfig {
                         .permitAll() // Permite que todos acessem a página de login
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout") // Para onde vai após o logout
+                        .logoutSuccessUrl("/login") // Para onde vai após o logout
                         .permitAll()
                 )
                 .rememberMe(withDefaults());

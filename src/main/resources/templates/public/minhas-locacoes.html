@@ -7,7 +7,7 @@
     <title th:text="${titulo}">Minhas Locações</title>
 </head>
 <body>
-<main layout:fragment="conteudo">
+<main layout:fragment="conteudo" th:fragment="locacoes">
 
     <a th:href="@{/locacao/nova}"
        th:hx-get="@{/locacao/nova}"
